@@ -2,22 +2,34 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Karekod Oto | Kod Üretim</title>
+    <title>Karekod Oto | GÜVENLİ KOD ÜRETİCİ</title>
     <style>
-        body { background: #0a0a0a; color: white; font-family: sans-serif; display: flex; justify-content: center; padding: 50px; }
-        .admin-card { background: #111; border: 1px solid #d4af37; padding: 30px; border-radius: 15px; width: 400px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; background: #222; border: 1px solid #444; color: white; }
-        button { width: 100%; padding: 15px; background: #d4af37; border: none; font-weight: bold; cursor: pointer; }
-        .list { margin-top: 20px; font-size: 12px; color: #888; border-top: 1px dashed #444; padding-top: 10px; }
+        body { background: #050505; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 40px; }
+        .admin-card { background: #111; border: 2px solid #d4af37; padding: 30px; border-radius: 20px; width: 500px; box-shadow: 0 0 30px rgba(212,175,55,0.15); }
+        h2 { color: #d4af37; text-align: center; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #aaa; font-size: 14px; }
+        input { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 18px; background: #d4af37; border: none; font-weight: bold; cursor: pointer; border-radius: 10px; font-size: 16px; transition: 0.3s; color: black; }
+        button:hover { background: #f1c40f; transform: translateY(-2px); }
+        #status { margin-top: 20px; padding: 12px; border-radius: 8px; text-align: center; display: none; font-weight: bold; }
+        .log-box { margin-top: 20px; max-height: 250px; overflow-y: auto; background: #000; padding: 15px; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 13px; color: #00ff00; border: 1px solid #222; }
+        .code-item { border-bottom: 1px dashed #222; padding: 5px 0; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
     <div class="admin-card">
-        <h2>Yeni Kod Üret</h2>
-        <input type="text" id="newCode" placeholder="Üretilecek Kod (Örn: 888999)" maxlength="6">
-        <button id="addBtn">VERİTABANINA EKLE</button>
+        <h2>🔒 GÜVENLİ KOD ÜRETİCİ</h2>
+        
+        <div class="form-group">
+            <label>KAÇ ADET KARMAŞIK KOD ÜRETİLSİN?</label>
+            <input type="number" id="count" placeholder="Örn: 50" value="10">
+        </div>
+
+        <button id="batchBtn">RASTGELE KODLARI BAS</button>
+        
         <div id="status"></div>
-        <div class="list" id="recentCodes">Son eklenenler burada görünecek...</div>
+        <div class="log-box" id="log">Sistem hazır. Kodları üretmek için butona basın...</div>
     </div>
 
     <script type="module">
@@ -26,35 +38,56 @@
 
         const firebaseConfig = {
             apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
-            authDomain: "karekod-oto.firebaseapp.com",
             databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "karekod-oto",
-            storageBucket: "karekod-oto.firebasestorage.app",
-            messagingSenderId: "899053328801",
-            appId: "1:899053328801:web:1076904672226ae01513e0"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        document.getElementById('addBtn').onclick = async () => {
-            const code = document.getElementById('newCode').value;
-            if(code.length !== 6) { alert("Kod 6 haneli olmalı!"); return; }
-
-            try {
-                await set(ref(db, 'aktivasyon_kodlari/' + code), {
-                    durum: "aktif",
-                    sahibi: "",
-                    telefon: "",
-                    plaka: "",
-                    arac_model: "",
-                    logo: "default"
-                });
-                document.getElementById('status').innerText = "Kod " + code + " başarıyla eklendi!";
-                document.getElementById('recentCodes').innerHTML += "<br>✅ " + code;
-            } catch (e) {
-                alert("Hata: " + e.message);
+        // Rastgele Kod Üretme Fonksiyonu (Harf + Sayı)
+        function generateRandomCode(length) {
+            const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Okunması zor olan (I, 1, O, 0) harflerini çıkardım
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
             }
+            return result;
+        }
+
+        document.getElementById('batchBtn').onclick = async () => {
+            const count = parseInt(document.getElementById('count').value);
+            const status = document.getElementById('status');
+            const log = document.getElementById('log');
+
+            if(isNaN(count) || count < 1) { alert("Lütfen adet girin!"); return; }
+
+            status.style.display = "block";
+            status.style.background = "#d4af37";
+            status.innerText = "Kodlar oluşturuluyor ve Firebase'e basılıyor...";
+            log.innerHTML = "<b>İşlem Başladı:</b><br>";
+
+            for(let i = 0; i < count; i++) {
+                let randomCode = generateRandomCode(6); // 6 haneli rastgele kod
+                
+                try {
+                    await set(ref(db, 'aktivasyon_kodlari/' + randomCode), {
+                        durum: "aktif",
+                        sahibi: "",
+                        telefon: "",
+                        plaka: "",
+                        arac_model: "",
+                        logo: "default"
+                    });
+                    log.innerHTML += `<div class="code-item"><span>✅ ${randomCode}</span> <span>HAZIR</span></div>`;
+                    log.scrollTop = log.scrollHeight;
+                } catch (e) {
+                    log.innerHTML += `<div style="color:red">❌ Hata (${randomCode}): ${e.message}</div>`;
+                }
+            }
+
+            status.style.background = "#25d366";
+            status.style.color = "white";
+            status.innerText = "BAŞARILI: " + count + " Adet Benzersiz Kod Eklendi!";
         };
     </script>
 </body>

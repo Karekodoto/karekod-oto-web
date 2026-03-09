@@ -3,101 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Karekod Oto | VIP Profil Tasarımı</title>
+    <title>VIP QR PANEL V50.0 - THE LEGEND</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Dancing+Script:wght@700&family=Cinzel:wght@900&family=Black+Ops+One&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --dark: #050505; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        :root { --gold: #d4af37; }
+        body { font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; margin: 0; background: #050505; color: white; overflow: hidden; }
         
-        /* Mobil Uyumlu Düzen */
-        #container { display: flex; flex-direction: row; height: 100%; width: 100%; }
-        #panel { width: 380px; padding: 20px; border-right: 1px solid #222; overflow-y: auto; background: #0f0f0f; box-sizing: border-box; }
-        #preview { flex-grow: 1; display: flex; justify-content: center; align-items: center; background: #000; padding: 10px; }
+        /* Panel ve Preview Düzeni */
+        #panel { width: 420px; padding: 20px; border-right: 2px solid var(--gold); overflow-y: auto; background: #0f0f0f; z-index: 10; box-sizing: border-box; }
+        #preview { flex-grow: 1; display: flex; justify-content: center; align-items: center; background: #000; position: relative; }
         
-        /* Mobil için Panel ve Önizleme Yer Değişimi */
         @media (max-width: 850px) {
-            #container { flex-direction: column; overflow-y: auto; }
-            #panel { width: 100%; border-right: none; height: auto; overflow: visible; }
-            #preview { height: 600px; order: -1; } /* Önizleme mobilde üstte görünsün */
+            body { flex-direction: column; overflow-y: auto; }
+            #panel { width: 100%; height: auto; border-right: none; border-bottom: 2px solid var(--gold); }
+            #preview { height: 650px; padding: 20px; }
         }
 
-        h2 { color: var(--gold); text-align: center; font-size: 1.2rem; border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-top: 0; }
-        .section-title { color: var(--gold); font-size: 11px; font-weight: bold; border-bottom: 1px solid #222; padding-bottom: 5px; margin: 20px 0 10px; text-transform: uppercase; }
+        h2 { color: var(--gold); text-align: center; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1.1rem; border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+        label { font-size: 10px; color: #888; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 5px; margin-top: 15px; }
+        input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #222; background: #1a1a1a; color: white; font-size: 14px; margin-bottom: 5px; box-sizing: border-box; }
+        .control-box { background: #151515; padding: 12px; border-radius: 10px; margin-top: 8px; border: 1px solid #222; }
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--gold); }
         
-        .control-box { background: #151515; padding: 12px; border-radius: 12px; border: 1px solid #222; margin-bottom: 10px; }
-        label { font-size: 11px; color: #888; display: block; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; font-size: 14px; margin-bottom: 10px; box-sizing: border-box; }
+        .btn-save { background: linear-gradient(45deg, #d4af37, #f2d06b); color: black; padding: 18px; width: 100%; border: none; font-weight: bold; cursor: pointer; border-radius: 10px; font-size: 15px; transition: 0.3s; text-transform: uppercase; margin-top: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-save:hover { transform: scale(1.02); background: #fff; }
+        .section-title { color: var(--gold); font-size: 11px; border-bottom: 1px solid #222; padding-bottom: 5px; margin-top: 20px; margin-bottom: 10px; font-weight: bold; }
         
-        .btn-save { background: linear-gradient(45deg, #d4af37, #f2d06b); color: black; padding: 18px; width: 100%; border: none; font-weight: bold; cursor: pointer; border-radius: 12px; font-size: 16px; transition: 0.3s; margin-top: 20px; }
-        iframe { width: 340px; height: 580px; border: none; border-radius: 30px; box-shadow: 0 0 40px rgba(212,175,55,0.2); background: white; }
+        iframe { width: 360px; height: 640px; border: none; border-radius: 40px; box-shadow: 0 0 50px rgba(212,175,55,0.2); }
     </style>
 </head>
 <body>
 
-<div id="container">
-    <div id="panel">
-        <h2>VIP PANEL V50.0 ☾⋆</h2>
-        
-        <div class="section-title">1. ARAÇ & MARKA</div>
-        <div class="control-box">
-            <label>ARAÇ MARKASI</label>
-            <select id="in-brand" onchange="update()">
-                <option value="https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg">Volkswagen</option>
-                <option value="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg">BMW</option>
-                <option value="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg">Mercedes</option>
-                <option value="https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg">Audi</option>
-                <option value="https://upload.wikimedia.org/wikipedia/commons/1/12/Fiat_logo.svg">Fiat</option>
-                <option value="https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg">Renault</option>
-            </select>
-            <label>PLAKA</label>
-            <input type="text" id="in-plaka" value="34 SR 2547" oninput="update()">
-        </div>
-
-        <div class="section-title">2. KİŞİSEL BİLGİLER</div>
-        <div class="control-box">
-            <input type="text" id="in-isim" value="AD SOYAD" oninput="update()">
-            <input type="text" id="in-tel" value="05xx" oninput="update()">
-            <select id="in-kan" onchange="update()">
-                <option value="">Kan Grubu Seçin</option>
-                <option value="A Rh+">A Rh+</option><option value="A Rh-">A Rh-</option>
-                <option value="B Rh+">B Rh+</option><option value="B Rh-">B Rh-</option>
-                <option value="0 Rh+">0 Rh+</option><option value="0 Rh-">0 Rh-</option>
-            </select>
-        </div>
-
-        <div class="section-title">3. TARAFTAR MODU</div>
-        <div class="control-box">
-            <select id="in-team" onchange="update()">
-                <option value="">Takım Yok</option>
-                <option value="gs">Galatasaray</option><option value="fb">Fenerbahçe</option>
-                <option value="bjk">Beşiktaş</option><option value="ts">Trabzonspor</option>
-            </select>
-            <select id="in-stars" onchange="update()">
-                <option value="0">Yıldız Yok</option><option value="1">1</option><option value="3">3</option><option value="4">4</option><option value="5">5 Yıldız</option>
-            </select>
-        </div>
-
-        <div class="section-title">4. TASARIM (ARKA PLAN)</div>
-        <div class="control-box">
-            <select id="in-bg-theme" onchange="update()">
-                <option value="vid_ocean">Gece Mavisi (Video)</option>
-                <option value="vid_gold">Altın Işıltı (Video)</option>
-                <option value="vid_space">Uzay Boşluğu (Video)</option>
-                <option value="solid_black">Mat Siyah</option>
-            </select>
-        </div>
-
-        <button class="btn-save" id="saveBtn">PROFİLİ KAYDET VE BİTİR</button>
+<div id="panel">
+    <h2>VIP PANEL V50.0 ☾⋆</h2>
+    
+    <div class="section-title">1. MARKA & PLAKA</div>
+    <div class="control-box">
+        <label>ARAÇ MARKASI</label>
+        <select id="in-brand" onchange="update()">
+            <option value="https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg">Volkswagen</option>
+            <option value="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg">BMW</option>
+            <option value="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg">Mercedes</option>
+            <option value="https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg">Audi</option>
+            <option value="https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg">Renault</option>
+            <option value="https://upload.wikimedia.org/wikipedia/commons/1/12/Fiat_logo.svg">Fiat</option>
+        </select>
+        <label>PLAKA</label>
+        <input type="text" id="in-plaka" value="34 SR 2547" oninput="update()">
     </div>
 
-    <div id="preview">
-        <iframe id="kart-frame"></iframe>
+    <div class="section-title">2. TASARIM & ŞEFFAFLIK</div>
+    <div class="control-box">
+        <label>KART ŞEFFAFLIĞI: <span id="op-val">0.90</span></label>
+        <input type="range" id="in-opacity" min="0" max="1" step="0.01" value="0.90" oninput="update()">
+        <label>ARKA PLAN TEMASI</label>
+        <select id="in-bg-theme" onchange="update()">
+            <optgroup label="CANLI VİDEOLAR">
+                <option value="vid_ocean" selected>Deniz Dalgaları</option>
+                <option value="vid_space">Uzay Derinliği</option>
+                <option value="vid_gold">Altın Tozu</option>
+                <option value="vid_rain">Gece Yağmuru</option>
+            </optgroup>
+            <optgroup label="SABİT">
+                <option value="solid_black">Asil Siyah</option>
+            </optgroup>
+        </select>
     </div>
+
+    <div class="section-title">3. YAZI STİLİ & RENK</div>
+    <div class="control-box">
+        <label>FONT SEÇİMİ</label>
+        <select id="in-font" onchange="update()">
+            <option value="'Montserrat'">Modern (Montserrat)</option>
+            <option value="'Cinzel'">Lüks (Cinzel)</option>
+            <option value="'Orbitron'">Cyber (Orbitron)</option>
+            <option value="'Dancing Script'">El Yazısı</option>
+            <option value="'Black Ops One'">Komando</option>
+        </select>
+        <label>İSİM RENGİ</label>
+        <input type="color" id="in-name-color" value="#ffffff" oninput="update()">
+    </div>
+
+    <div class="section-title">4. TARAFTAR & KAN GRUBU</div>
+    <div class="control-box">
+        <label>TAKIM</label>
+        <select id="in-team" onchange="update()">
+            <option value="">Takım Yok</option>
+            <option value="gs">Galatasaray</option>
+            <option value="fb">Fenerbahçe</option>
+            <option value="bjk">Beşiktaş</option>
+            <option value="ts">Trabzonspor</option>
+        </select>
+        <label>YILDIZ SAYISI</label>
+        <select id="in-stars" onchange="update()">
+            <option value="0">Yıldız Yok</option>
+            <option value="1">1 Yıldız</option>
+            <option value="3">3 Yıldız</option>
+            <option value="4">4 Yıldız</option>
+            <option value="5">5 Yıldız</option>
+        </select>
+        <label>KAN GRUBU</label>
+        <select id="in-kan" onchange="update()">
+            <option value="">Belirtme</option>
+            <option value="A Rh+">A Rh+</option><option value="A Rh-">A Rh-</option>
+            <option value="B Rh+">B Rh+</option><option value="B Rh-">B Rh-</option>
+            <option value="AB Rh+">AB Rh+</option><option value="AB Rh-">AB Rh-</option>
+            <option value="0 Rh+">0 Rh+</option><option value="0 Rh-">0 Rh-</option>
+        </select>
+    </div>
+
+    <div class="section-title">5. İLETİŞİM BİLGİLERİ</div>
+    <input type="text" id="in-isim" value="ADINIZ SOYADINIZ" oninput="update()">
+    <input type="text" id="in-tel" value="" placeholder="Telefon (05xx...)" oninput="update()">
+    
+    <button class="btn-save" id="saveBtn"><i class="fas fa-save"></i> PROFİLİ SİSTEME KAYDET</button>
+</div>
+
+<div id="preview">
+    <iframe id="kart-frame"></iframe>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+    import { getDatabase, ref, update as fbUpdate } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
@@ -110,42 +139,46 @@
     const code = urlParams.get('code');
 
     window.update = function() {
+        const op = document.getElementById('in-opacity').value;
+        document.getElementById('op-val').innerText = op;
+
         const d = {
             isim: document.getElementById('in-isim').value,
             plaka: document.getElementById('in-plaka').value,
             tel: document.getElementById('in-tel').value,
             kan: document.getElementById('in-kan').value,
             brand: document.getElementById('in-brand').value,
+            font: document.getElementById('in-font').value,
+            nCol: document.getElementById('in-name-color').value,
             team: document.getElementById('in-team').value,
             stars: parseInt(document.getElementById('in-stars').value),
-            theme: document.getElementById('in-bg-theme').value
+            theme: document.getElementById('in-bg-theme').value,
+            op: op
         };
 
         const themes = {
             vid_ocean: "https://player.vimeo.com/external/370331493.sd.mp4?s=3307581692ec1861053001804d9136113b2e5a49&profile_id=139",
+            vid_space: "https://player.vimeo.com/external/415510651.sd.mp4?s=f520b22a6136e4f323ec910606d5c5f8b9696c6b&profile_id=139",
             vid_gold: "https://player.vimeo.com/external/440536785.sd.mp4?s=637c22345091694f27d5f0e1d51543ec8b495914&profile_id=139",
-            vid_space: "https://player.vimeo.com/external/415510651.sd.mp4?s=f520b22a6136e4f323ec910606d5c5f8b9696c6b&profile_id=139"
+            vid_rain: "https://player.vimeo.com/external/510850877.sd.mp4?s=d99436709f1969a53826019a797c554341982703&profile_id=139"
         };
-
         const teamL = { gs: "https://img.icons8.com/color/144/galatasaray.png", fb: "https://img.icons8.com/color/144/fenerbahce.png", bjk: "https://img.icons8.com/color/144/besiktas.png", ts: "https://img.icons8.com/color/144/trabzonspor.png" };
-        
+
         let starsH = "";
-        for(let i=0; i<d.stars; i++) {
-            starsH += `<i class="fas fa-star" style="color:#d4af37; font-size:10px; margin:0 2px;"></i>`;
-        }
+        for(let i=0; i<d.stars; i++) { starsH += `<i class="fas fa-star" style="color:#d4af37; font-size:10px; margin:0 2px;"></i>`; }
 
         const temp = `
         <!DOCTYPE html><html><head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
-            body{margin:0; height:100vh; display:flex; justify-content:center; align-items:center; background:#000; font-family:sans-serif; overflow:hidden;}
+            body{margin:0; height:100vh; display:flex; justify-content:center; align-items:center; background:#000; font-family:${d.font}, sans-serif; overflow:hidden;}
             video{position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; opacity:0.6;}
-            .card{width:280px; background:rgba(255,255,255,0.1); backdrop-filter:blur(20px); padding:30px; border-radius:40px; text-align:center; color:white; border:1px solid rgba(255,255,255,0.2);}
+            .card{width:280px; background:rgba(255,255,255,${d.op}); backdrop-filter:blur(20px); padding:30px; border-radius:40px; text-align:center; color:white; border:1px solid rgba(255,255,255,0.2); box-shadow:0 20px 40px rgba(0,0,0,0.5);}
             .logo img{height:60px; margin-bottom:10px;}
-            .plate{background:white; color:black; display:inline-flex; font-weight:900; font-size:20px; border-radius:5px; overflow:hidden; border:2px solid #000; margin:15px 0;}
+            .plate{background:white; color:black; display:inline-flex; font-weight:900; font-size:22px; border-radius:5px; overflow:hidden; border:2px solid #000; margin:15px 0; font-family:Arial, sans-serif;}
             .plate-tr{background:#003399; color:white; width:20px; font-size:10px; display:flex; align-items:center; justify-content:center;}
             .plate-no{padding:5px 10px;}
-            h1{font-size:22px; margin:10px 0;}
+            h1{font-size:24px; color:${d.nCol}; text-transform:uppercase; margin:15px 0;}
             .kan{background:#e30a17; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; display:inline-block; margin-bottom:10px;}
             .btn{display:block; padding:15px; background:white; color:black; text-decoration:none; border-radius:15px; font-weight:bold; margin-top:10px;}
         </style>
@@ -153,7 +186,7 @@
         ${d.theme.startsWith('vid') ? `<video autoplay muted loop playsinline><source src="${themes[d.theme]}"></video>` : ''}
         <div class="card">
             <div class="logo"><img src="${d.brand}"></div>
-            <div style="margin-bottom:10px;">${d.team ? `<div style="margin-bottom:5px;">${starsH}</div><img src="${teamL[d.team]}" style="height:40px;">` : ''}</div>
+            <div style="height:50px;">${d.team ? `<div>${starsH}</div><img src="${teamL[d.team]}" style="height:40px;">` : ''}</div>
             <div class="plate"><div class="plate-tr">TR</div><div class="plate-no">${d.plaka}</div></div><br>
             ${d.kan ? `<div class="kan">${d.kan}</div>` : ''}
             <h1>${d.isim}</h1>
@@ -165,28 +198,31 @@
     };
 
     document.getElementById('saveBtn').onclick = async () => {
-        // Firebase kaydetme işlemi buraya gelecek
-        const d = {
+        if(!code) return alert("Kod eksik!");
+        
+        const data = {
             sahibi: document.getElementById('in-isim').value,
             plaka: document.getElementById('in-plaka').value,
             telefon: document.getElementById('in-tel').value,
             kan: document.getElementById('in-kan').value,
             logo: document.getElementById('in-brand').value,
+            font: document.getElementById('in-font').value,
+            nCol: document.getElementById('in-name-color').value,
             takim: document.getElementById('in-team').value,
             yildiz: document.getElementById('in-stars').value,
             tema: document.getElementById('in-bg-theme').value,
+            seffaflik: document.getElementById('in-opacity').value,
             durum: "kullanildi"
         };
 
         try {
-            await update(ref(db, 'aktivasyon_kodlari/' + code), d);
-            alert("Profil Kaydedildi!");
+            await fbUpdate(ref(db, 'aktivasyon_kodlari/' + code), data);
+            alert("VIP Profiliniz Başarıyla Kaydedildi!");
             window.location.href = "index.html?id=" + code;
-        } catch(e) { alert("Hata!"); }
+        } catch(e) { alert("Hata: " + e.message); }
     };
 
-    update(); // İlk açılışta önizlemeyi çalıştır
+    update();
 </script>
-
 </body>
 </html>

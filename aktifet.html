@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karekod Oto | Aktivasyon</title>
+    <style>
+        :root { --gold: #d4af37; --dark: #0a0a0a; }
+        body { background-color: var(--dark); color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #151515; border: 1px solid var(--gold); padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; }
+        .logo { color: var(--gold); font-size: 22px; font-weight: bold; margin-bottom: 20px; }
+        input { width: 100%; background: #222; border: 1px solid #333; padding: 15px; border-radius: 10px; color: #fff; font-size: 20px; text-align: center; letter-spacing: 5px; margin-bottom: 20px; box-sizing: border-box; }
+        .btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        #status { margin-top: 15px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="logo">KAREKOD OTO</div>
+        <p>6 Haneli Aktivasyon Kodunu Girin</p>
+        <input type="text" id="code" placeholder="******" maxlength="6">
+        <button class="btn" id="activateBtn">SİSTEMİ AKTİF ET</button>
+        <div id="status"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        // Senin Firebase Bilgilerin
+        const firebaseConfig = {
+            apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
+            authDomain: "karekod-oto.firebaseapp.com",
+            databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "karekod-oto",
+            storageBucket: "karekod-oto.firebasestorage.app",
+            messagingSenderId: "899053328801",
+            appId: "1:899053328801:web:1076904672226ae01513e0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById('activateBtn').onclick = async () => {
+            const code = document.getElementById('code').value;
+            const status = document.getElementById('status');
+            
+            if(code.length !== 6) {
+                status.innerText = "Lütfen 6 hane girin.";
+                return;
+            }
+
+            status.innerText = "Kontrol ediliyor...";
+
+            // Veritabanında kodu sorgula
+            const codeRef = ref(db, 'aktivasyon_kodlari/' + code);
+            const snapshot = await get(codeRef);
+
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                if(data.durum === "aktif") {
+                    status.style.color = "gold";
+                    status.innerText = "Kod Onaylandı! Yönlendiriliyorsunuz...";
+                    // Kodu kullanıldı yap (opsiyonel)
+                    // await update(codeRef, { durum: "kullanildi" }); 
+                    
+                    setTimeout(() => {
+                        alert("Başarılı! Şimdi profilinizi oluşturun.");
+                        // window.location.href = "profil-olustur.html"; 
+                    }, 1500);
+                } else {
+                    status.innerText = "Bu kod daha önce kullanılmış.";
+                }
+            } else {
+                status.style.color = "red";
+                status.innerText = "Hatalı veya geçersiz kod!";
+            }
+        };
+    </script>
+</body>
+</html>

@@ -26,9 +26,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // Senin Firebase Bilgilerin
         const firebaseConfig = {
             apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
             authDomain: "karekod-oto.firebaseapp.com",
@@ -53,7 +52,6 @@
 
             status.innerText = "Kontrol ediliyor...";
 
-            // Veritabanında kodu sorgula
             const codeRef = ref(db, 'aktivasyon_kodlari/' + code);
             const snapshot = await get(codeRef);
 
@@ -62,13 +60,12 @@
                 if(data.durum === "aktif") {
                     status.style.color = "gold";
                     status.innerText = "Kod Onaylandı! Yönlendiriliyorsunuz...";
-                    // Kodu kullanıldı yap (opsiyonel)
-                    // await update(codeRef, { durum: "kullanildi" }); 
                     
+                    // BURASI KRİTİK: Bir sonraki sayfaya kodu gönderiyoruz
                     setTimeout(() => {
-                        alert("Başarılı! Şimdi profilinizi oluşturun.");
-                        // window.location.href = "profil-olustur.html"; 
+                        window.location.href = "profil-olustur.html?code=" + code; 
                     }, 1500);
+
                 } else {
                     status.innerText = "Bu kod daha önce kullanılmış.";
                 }

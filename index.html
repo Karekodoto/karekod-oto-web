@@ -3,34 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karekod Oto | Sürücü Profili</title>
+    <title>Karekod Oto | VIP Profil</title>
     <style>
-        :root { --gold: #d4af37; --dark: #0a0a0a; }
-        body { background-color: var(--dark); color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border: 1px solid var(--gold); padding: 40px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .logo { color: var(--gold); font-size: 14px; letter-spacing: 3px; margin-bottom: 30px; }
-        .profile-img { width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--gold); }
-        h1 { font-size: 24px; margin: 10px 0; }
-        .plate { background: var(--gold); color: black; padding: 5px 15px; border-radius: 5px; font-weight: bold; display: inline-block; margin-bottom: 20px; }
-        .info { color: #aaa; margin-bottom: 30px; }
-        .call-btn { display: block; background: #25d366; color: white; text-decoration: none; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 18px; transition: 0.3s; }
-        .call-btn:hover { transform: scale(1.05); }
-        #loading { font-size: 14px; color: var(--gold); }
+        :root { --gold: #d4af37; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #000; }
+        
+        /* Arka Plan Videosu */
+        #bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; opacity: 0.4; filter: blur(3px); }
+
+        .overlay { height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; }
+        
+        .card { background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.3); padding: 40px; border-radius: 35px; width: 85%; max-width: 380px; text-align: center; color: white; box-shadow: 0 20px 50px rgba(0,0,0,1); }
+        
+        .logo-img { width: 60px; margin-bottom: 10px; filter: drop-shadow(0 0 5px var(--gold)); }
+        h1 { font-size: 26px; margin: 5px 0; letter-spacing: 1px; }
+        .plate { background: white; color: black; padding: 5px 20px; border-radius: 8px; font-weight: 900; font-size: 22px; display: inline-block; border: 2px solid #000; margin: 15px 0; position: relative; }
+        .plate::before { content: "TR"; position: absolute; left: 0; top: 0; bottom: 0; background: #003399; color: white; font-size: 10px; padding: 5px 2px; border-radius: 5px 0 0 5px; }
+
+        .btn-group { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .btn { padding: 18px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 16px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-call { background: var(--gold); color: black; }
+        .btn-wp { background: #25d366; color: white; }
     </style>
 </head>
 <body>
 
-    <div class="card" id="mainCard" style="display:none;">
-        <div class="logo">KAREKOD OTO</div>
-        <div class="profile-img">👤</div>
-        <h1 id="displayName">Yükleniyor...</h1>
-        <div class="plate" id="displayPlate">---</div>
-        <p class="info" id="displayModel">Araç Bilgisi</p>
-        
-        <a href="#" id="callLink" class="call-btn">SÜRÜCÜYÜ ARA</a>
-    </div>
+    <video autoplay muted loop id="bg-video">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-fast-driving-in-a-city-at-night-11756-large.mp4" type="video/mp4">
+    </video>
 
-    <div id="loading">Profil Bilgileri Getiriliyor...</div>
+    <div class="overlay">
+        <div class="card" id="profileCard" style="display:none;">
+            <div id="brandLogo"></div>
+            <h1 id="uName">Sürücü</h1>
+            <div class="plate" id="uPlate">00 ABC 00</div>
+            <p id="uModel" style="color: #ccc;"></p>
+
+            <div class="btn-group">
+                <a href="#" id="callBtn" class="btn btn-call">📞 ŞİMDİ ARA</a>
+                <a href="#" id="wpBtn" class="btn btn-wp">💬 WHATSAPP'TAN YAZ</a>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -38,34 +52,30 @@
 
         const firebaseConfig = {
             apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
-            authDomain: "karekod-oto.firebaseapp.com",
             databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "karekod-oto",
-            storageBucket: "karekod-oto.firebasestorage.app",
-            messagingSenderId: "899053328801",
-            appId: "1:899053328801:web:1076904672226ae01513e0"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // QR kodun içindeki ID'yi al (Örn: karekodoto.com/?id=123456)
         const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('id') || "123456"; 
+        const code = urlParams.get('id') || "123456";
 
-        const userRef = ref(db, 'aktivasyon_kodlari/' + code);
-        get(userRef).then((snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                document.getElementById('displayName').innerText = data.sahibi;
-                document.getElementById('displayPlate').innerText = data.plaka;
-                document.getElementById('displayModel').innerText = data.arac_model;
-                document.getElementById('callLink').href = "tel:" + data.telefon;
-                
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('mainCard').style.display = 'block';
-            } else {
-                document.getElementById('loading').innerText = "Profil bulunamadı.";
+        get(ref(db, 'aktivasyon_kodlari/' + code)).then((snap) => {
+            if(snap.exists()){
+                const d = snap.val();
+                document.getElementById('uName').innerText = d.sahibi;
+                document.getElementById('uPlate').innerText = d.plaka;
+                document.getElementById('uModel').innerText = d.arac_model;
+                document.getElementById('callBtn').href = "tel:" + d.telefon;
+                document.getElementById('wpBtn').href = "https://wa.me/9" + d.telefon;
+
+                // Dinamik Logo Ayarı (Örn: Passat yazıyorsa VW logosu)
+                if(d.arac_model.toLowerCase().includes("passat") || d.arac_model.toLowerCase().includes("vw")) {
+                    document.getElementById('brandLogo').innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg" class="logo-img">';
+                }
+
+                document.getElementById('profileCard').style.display = 'block';
             }
         });
     </script>

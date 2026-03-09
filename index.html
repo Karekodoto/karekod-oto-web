@@ -3,55 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karekod Oto | VIP Profil</title>
+    <title>Karekod Oto | Profilini Özelleştir</title>
     <style>
-        :root { --gold: #d4af37; }
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #000; }
+        :root { --gold: #d4af37; --dark: #0a0a0a; }
+        body { background-color: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .card { background: #151515; border: 1px solid var(--gold); padding: 30px; border-radius: 25px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { color: var(--gold); text-align: center; margin-bottom: 25px; }
         
-        /* Arka Plan Videosu */
-        #bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; opacity: 0.4; filter: blur(3px); }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; color: var(--gold); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        input, select { width: 100%; background: #222; border: 1px solid #333; padding: 12px; border-radius: 10px; color: #fff; font-size: 16px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--gold); }
 
-        .overlay { height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; }
-        
-        .card { background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.3); padding: 40px; border-radius: 35px; width: 85%; max-width: 380px; text-align: center; color: white; box-shadow: 0 20px 50px rgba(0,0,0,1); display: none; }
-        
-        .logo-img { width: 70px; margin-bottom: 10px; filter: drop-shadow(0 0 8px var(--gold)); }
-        h1 { font-size: 26px; margin: 5px 0; letter-spacing: 1px; text-transform: uppercase; }
-        .plate { background: white; color: black; padding: 5px 20px; border-radius: 8px; font-weight: 900; font-size: 24px; display: inline-block; border: 2px solid #000; margin: 15px 0; position: relative; }
-        .plate::before { content: "TR"; position: absolute; left: 0; top: 0; bottom: 0; background: #003399; color: white; font-size: 10px; padding: 8px 3px; border-radius: 5px 0 0 5px; }
+        .brand-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .brand-option { background: #222; border: 1px solid #333; padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .brand-option.selected { border-color: var(--gold); background: rgba(212, 175, 55, 0.1); }
+        .brand-option img { width: 30px; height: 30px; object-fit: contain; }
 
-        .btn-group { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
-        .btn { padding: 18px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 16px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-call { background: var(--gold); color: black; }
-        .btn-wp { background: #25d366; color: white; }
-        #loading { color: var(--gold); font-weight: bold; }
+        .btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 20px; transition: 0.3s; }
+        .btn:hover { background: #f1c40f; transform: scale(1.02); }
+        #status { text-align: center; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop id="bg-video">
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-fast-driving-in-a-city-at-night-11756-large.mp4" type="video/mp4">
-    </video>
-
-    <div class="overlay">
-        <div id="loading">Sistem Kontrol Ediliyor...</div>
-
-        <div class="card" id="profileCard">
-            <div id="brandLogo"></div>
-            <h1 id="uName">Yükleniyor...</h1>
-            <div class="plate" id="uPlate">-- --- --</div>
-            <p id="uModel" style="color: #ccc; margin-top:0;"></p>
-
-            <div class="btn-group">
-                <a href="#" id="callBtn" class="btn btn-call">📞 SÜRÜCÜYÜ ARA</a>
-                <a href="#" id="wpBtn" class="btn btn-wp">💬 WHATSAPP MESAJ</a>
-            </div>
+    <div class="card">
+        <h2>🚗 Sürücü Profilini Kur</h2>
+        
+        <div class="input-group">
+            <label>Ad Soyad</label>
+            <input type="text" id="name" placeholder="Örn: Mehmet Anlı">
         </div>
+
+        <div class="input-group">
+            <label>Telefon Numarası</label>
+            <input type="tel" id="phone" placeholder="05xx xxx xx xx">
+        </div>
+
+        <div class="input-group">
+            <label>Araç Plakası</label>
+            <input type="text" id="plate" placeholder="34 ABC 123">
+        </div>
+
+        <div class="input-group">
+            <label>Araç Markası Seçin</label>
+            <div class="brand-grid" id="brandGrid">
+                </div>
+        </div>
+
+        <div class="input-group">
+            <label>Araç Modeli (Opsiyonel)</label>
+            <input type="text" id="model" placeholder="Örn: Passat 2025">
+        </div>
+
+        <button class="btn" id="saveBtn">PROFİLİ OLUŞTUR VE BİTİR</button>
+        <div id="status"></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
@@ -61,49 +72,71 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // URL'den ID'yi al (Örn: karekodoto.com/?id=A7B2C9)
+        // Marka Listesi ve Logolar
+        const brands = [
+            { name: "VW", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg" },
+            { name: "BMW", logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" },
+            { name: "Mercedes", logo: "https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg" },
+            { name: "Audi", logo: "https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg" },
+            { name: "Fiat", logo: "https://upload.wikimedia.org/wikipedia/commons/1/12/Fiat_logo.svg" },
+            { name: "Renault", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg" }
+        ];
+
+        const brandGrid = document.getElementById('brandGrid');
+        let selectedLogo = "default";
+
+        // Markaları ekrana bas
+        brands.forEach(b => {
+            const div = document.createElement('div');
+            div.className = 'brand-option';
+            div.innerHTML = `<img src="${b.logo}"><br><small>${b.name}</small>`;
+            div.onclick = () => {
+                document.querySelectorAll('.brand-option').forEach(el => el.classList.remove('selected'));
+                div.classList.add('selected');
+                selectedLogo = b.logo;
+            };
+            brandGrid.appendChild(div);
+        });
+
+        // URL'den kodu al
         const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('id');
+        const code = urlParams.get('code');
 
-        // 1. KONTROL: Eğer ID yoksa doğrudan Aktivasyon sayfasına gönder
-        if (!code) {
-            window.location.href = "aktifet.html";
-        } else {
-            const userRef = ref(db, 'aktivasyon_kodlari/' + code);
-            get(userRef).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
+        document.getElementById('saveBtn').onclick = async () => {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const plate = document.getElementById('plate').value;
+            const model = document.getElementById('model').value;
+            const status = document.getElementById('status');
 
-                    // 2. KONTROL: Eğer kod veritabanında var ama henüz sahibi yoksa (aktifse)
-                    if (data.durum === "aktif") {
-                        window.location.href = "aktifet.html?code=" + code;
-                    } else {
-                        // 3. DURUM: Kod dolu! Bilgileri göster.
-                        document.getElementById('loading').style.display = 'none';
-                        document.getElementById('profileCard').style.display = 'block';
-                        
-                        document.getElementById('uName').innerText = data.sahibi;
-                        document.getElementById('uPlate').innerText = data.plaka;
-                        document.getElementById('uModel').innerText = data.arac_model;
-                        document.getElementById('callBtn').href = "tel:" + data.telefon;
-                        document.getElementById('wpBtn').href = "https://wa.me/9" + data.telefon;
+            if(!name || !phone || !plate) {
+                alert("Lütfen zorunlu alanları doldurun!");
+                return;
+            }
 
-                        // Logo Zekası: Passat veya VW yazıyorsa logo çıkar
-                        const model = data.arac_model.toLowerCase();
-                        if(model.includes("passat") || model.includes("vw") || model.includes("volkswagen")) {
-                            document.getElementById('brandLogo').innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg" class="logo-img">';
-                        }
-                    }
-                } else {
-                    // Kod veritabanında hiç yoksa
-                    alert("Geçersiz Karekod! Aktivasyon sayfasına yönlendiriliyorsunuz.");
-                    window.location.href = "aktifet.html";
-                }
-            }).catch((error) => {
-                console.error("Hata:", error);
-                document.getElementById('loading').innerText = "Bir hata oluştu!";
-            });
-        }
+            status.innerText = "Kaydediliyor...";
+
+            try {
+                await update(ref(db, 'aktivasyon_kodlari/' + code), {
+                    sahibi: name,
+                    telefon: phone,
+                    plaka: plate,
+                    arac_model: model,
+                    logo: selectedLogo, // Seçilen logoyu kaydediyoruz!
+                    durum: "kullanildi"
+                });
+                status.style.color = "#25d366";
+                status.innerText = "Profil Başarıyla Oluşturuldu!";
+                
+                setTimeout(() => {
+                    window.location.href = "index.html?id=" + code;
+                }, 2000);
+
+            } catch (e) {
+                status.innerText = "Hata oluştu!";
+                console.error(e);
+            }
+        };
     </script>
 </body>
 </html>

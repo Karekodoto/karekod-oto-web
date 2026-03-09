@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karekod Oto | Profil Oluştur</title>
+    <style>
+        :root { --gold: #d4af37; --dark: #0a0a0a; }
+        body { background-color: var(--dark); color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .card { background: #151515; border: 1px solid var(--gold); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; }
+        .logo { color: var(--gold); font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+        h2 { font-size: 18px; margin-bottom: 20px; color: #ccc; }
+        .input-group { text-align: left; margin-bottom: 15px; }
+        label { display: block; font-size: 12px; color: var(--gold); margin-bottom: 5px; margin-left: 5px; }
+        input { width: 100%; background: #222; border: 1px solid #333; padding: 12px; border-radius: 10px; color: #fff; font-size: 16px; box-sizing: border-box; }
+        .btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
+        #status { margin-top: 15px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="logo">KAREKOD OTO</div>
+        <h2>Sürücü Bilgilerini Kaydet</h2>
+        
+        <div class="input-group">
+            <label>AD SOYAD</label>
+            <input type="text" id="name" placeholder="Örn: Ahmet Yılmaz">
+        </div>
+
+        <div class="input-group">
+            <label>TELEFON NUMARASI</label>
+            <input type="tel" id="phone" placeholder="05XX XXX XX XX">
+        </div>
+
+        <div class="input-group">
+            <label>ARAÇ PLAKASI</label>
+            <input type="text" id="plate" placeholder="34 ABC 123">
+        </div>
+
+        <div class="input-group">
+            <label>ARAÇ MODELİ (Opsiyonel)</label>
+            <input type="text" id="model" placeholder="Örn: Passat 2023">
+        </div>
+
+        <button class="btn" id="saveBtn">PROFİLİ OLUŞTUR VE BİTİR</button>
+        <div id="status"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
+            authDomain: "karekod-oto.firebaseapp.com",
+            databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "karekod-oto",
+            storageBucket: "karekod-oto.firebasestorage.app",
+            messagingSenderId: "899053328801",
+            appId: "1:899053328801:web:1076904672226ae01513e0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Bir önceki sayfadan gelen kodu hatırla (Basitlik için şimdilik manuel test edebilirsin)
+        // Normalde buraya URL üzerinden kod gelecek.
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeCode = urlParams.get('code') || "123456"; 
+
+        document.getElementById('saveBtn').onclick = async () => {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const plate = document.getElementById('plate').value;
+            const model = document.getElementById('model').value;
+            const status = document.getElementById('status');
+
+            if(!name || !phone || !plate) {
+                status.style.color = "red";
+                status.innerText = "Lütfen zorunlu alanları doldurun!";
+                return;
+            }
+
+            status.innerText = "Kaydediliyor...";
+
+            try {
+                // Veritabanında o kodun altına bilgileri yazıyoruz
+                await update(ref(db, 'aktivasyon_kodlari/' + activeCode), {
+                    sahibi: name,
+                    telefon: phone,
+                    plaka: plate,
+                    arac_model: model,
+                    durum: "kullanildi"
+                });
+
+                status.style.color = "gold";
+                status.innerText = "Profil Başarıyla Oluşturuldu!";
+                
+                setTimeout(() => {
+                    alert("Tebrikler! Artık bu QR kod sizin profilinize bağlı.");
+                    // window.location.href = "kartvizit.html"; // Final sayfası
+                }, 2000);
+
+            } catch (error) {
+                status.innerText = "Hata oluştu: " + error.message;
+            }
+        };
+    </script>
+</body>
+</html>

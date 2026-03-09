@@ -3,102 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karekod Oto | VIP Dijital Araç Kimliği</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    
+    <title>Karekod Oto | Sürücü Profili</title>
     <style>
-        :root {
-            --gold: #d4af37;
-            --dark-bg: #0a0a0a;
-            --card-bg: #1a1a1a;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: var(--dark-bg); color: white; font-family: 'Montserrat', sans-serif; line-height: 1.6; overflow-x: hidden; }
-
-        /* Navigasyon */
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 25px 8%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(212,175,55,0.2); }
-        .logo { font-family: 'Cinzel', serif; font-size: 28px; color: var(--gold); letter-spacing: 3px; font-weight: bold; text-decoration: none; }
-
-        /* Hero (Giriş) Alanı */
-        .hero { height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 5%; background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
-        .hero h1 { font-family: 'Cinzel', serif; font-size: 3.5rem; color: var(--gold); margin-bottom: 20px; text-shadow: 0 0 15px rgba(212,175,55,0.3); }
-        .hero p { font-size: 1.1rem; max-width: 700px; color: #aaa; margin-bottom: 40px; }
-
-        /* Paket Kartları */
-        .pricing { padding: 80px 8%; display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
-        .card { background: var(--card-bg); border-radius: 25px; padding: 45px 30px; text-align: center; width: 350px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; position: relative; }
-        .card:hover { transform: translateY(-10px); border-color: var(--gold); }
-        .card.vip { border: 2px solid var(--gold); }
-        .card h2 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 24px; margin-bottom: 15px; }
-        .price { font-size: 50px; font-weight: 700; margin-bottom: 25px; }
-        .price span { font-size: 18px; color: var(--gold); }
-        
-        /* Özellikler */
-        .features { list-style: none; text-align: left; margin-bottom: 35px; min-height: 150px; }
-        .features li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; color: #ccc; font-size: 14px; }
-        .features i { color: var(--gold); }
-
-        /* Butonlar */
-        .btn { display: inline-block; padding: 15px 40px; border-radius: 50px; font-weight: 700; text-decoration: none; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-gold { background: var(--gold); color: #000; }
-        .btn-gold:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
-
-        /* Footer */
-        footer { padding: 60px 8% 30px; background: #000; text-align: center; border-top: 1px solid #111; }
-        .legal { font-size: 11px; color: #444; max-width: 800px; margin: 30px auto; line-height: 1.6; text-align: justify; }
-
-        @media (max-width: 768px) { .hero h1 { font-size: 2.2rem; } .card { width: 100%; } }
+        :root { --gold: #d4af37; --dark: #0a0a0a; }
+        body { background-color: var(--dark); color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border: 1px solid var(--gold); padding: 40px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .logo { color: var(--gold); font-size: 14px; letter-spacing: 3px; margin-bottom: 30px; }
+        .profile-img { width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--gold); }
+        h1 { font-size: 24px; margin: 10px 0; }
+        .plate { background: var(--gold); color: black; padding: 5px 15px; border-radius: 5px; font-weight: bold; display: inline-block; margin-bottom: 20px; }
+        .info { color: #aaa; margin-bottom: 30px; }
+        .call-btn { display: block; background: #25d366; color: white; text-decoration: none; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 18px; transition: 0.3s; }
+        .call-btn:hover { transform: scale(1.05); }
+        #loading { font-size: 14px; color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="#" class="logo">KAREKOD OTO</a>
-        <div style="font-size: 12px; color: var(--gold);">2026 Tescilli Marka</div>
-    </nav>
+    <div class="card" id="mainCard" style="display:none;">
+        <div class="logo">KAREKOD OTO</div>
+        <div class="profile-img">👤</div>
+        <h1 id="displayName">Yükleniyor...</h1>
+        <div class="plate" id="displayPlate">---</div>
+        <p class="info" id="displayModel">Araç Bilgisi</p>
+        
+        <a href="#" id="callLink" class="call-btn">SÜRÜCÜYÜ ARA</a>
+    </div>
 
-    <section class="hero">
-        <h1>ARACINIZIN DİJİTAL İMZASI</h1>
-        <p>Numaranızı herkesle paylaşmayın. Lüks araçlar için tasarlanan VIP karekod sistemleri ile gizliliğinizi ve prestijinizi koruyun.</p>
-        <a href="#paketler" class="btn btn-gold">PAKETLERİ KEŞFET</a>
-    </section>
+    <div id="loading">Profil Bilgileri Getiriliyor...</div>
 
-    <section class="pricing" id="paketler">
-        <div class="card">
-            <h2>BLACK EDITION</h2>
-            <div class="price">300 <span>TL</span></div>
-            <ul class="features">
-                <li><i class="fas fa-check"></i> Minimalist Siyah/Beyaz Tasarım</li>
-                <li><i class="fas fa-check"></i> Anında WhatsApp Bağlantısı</li>
-                <li><i class="fas fa-check"></i> Hatalı Park Bildirim Sistemi</li>
-                <li><i class="fas fa-check"></i> Yüksek Kaliteli Pleksi Baskı</li>
-            </ul>
-            <a href="https://wa.me/905526278690?text=Karekod Oto Black Edition siparişi vermek istiyorum." class="btn btn-gold">HEMEN AL</a>
-        </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        <div class="card vip">
-            <div style="position:absolute; top:15px; right:15px; background:var(--gold); color:black; padding:4px 12px; border-radius:8px; font-weight:bold; font-size:10px;">ÖNERİLEN</div>
-            <h2>VIP CUSTOM</h2>
-            <div class="price">600 <span>TL</span></div>
-            <ul class="features">
-                <li><i class="fas fa-crown"></i> LV / Carbon / Altın Özel Tasarım</li>
-                <li><i class="fas fa-crown"></i> <strong>Video Mesaj Özelliği</strong></li>
-                <li><i class="fas fa-crown"></i> Galeri Logosu Entegrasyonu</li>
-                <li><i class="fas fa-crown"></i> Öncelikli VIP Destek Hattı</li>
-            </ul>
-            <a href="https://wa.me/905526278690?text=Karekod Oto VIP Custom (Video Özellikli) paket hakkında bilgi istiyorum." class="btn btn-gold">ÖZEL TASARLAT</a>
-        </div>
-    </section>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
+            authDomain: "karekod-oto.firebaseapp.com",
+            databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "karekod-oto",
+            storageBucket: "karekod-oto.firebasestorage.app",
+            messagingSenderId: "899053328801",
+            appId: "1:899053328801:web:1076904672226ae01513e0"
+        };
 
-    <footer>
-        <div class="logo" style="font-size: 20px; margin-bottom: 15px;">KAREKOD OTO</div>
-        <p style="color: #666; font-size: 14px;">© 2026 Karekod Oto | Elit Bir Dokunuş.</p>
-        <div class="legal">
-            <strong>HUKUKİ BİLGİLENDİRME:</strong> Karekod Oto, kişiye özel tasarım hizmeti sunan bir platformdur. Ürünlerimizde kullanılan marka logoları ve özel desenler, müşterilerimizin talebi ve onayı doğrultusunda uygulanmaktadır. Tasarım içeriklerinin telif hakları sorumluluğu siparişi veren tarafa aittir. Hizmetimiz sadece iletişim kolaylığı sağlamak amacıyla sunulmaktadır.
-        </div>
-    </footer>
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
+        // QR kodun içindeki ID'yi al (Örn: karekodoto.com/?id=123456)
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('id') || "123456"; 
+
+        const userRef = ref(db, 'aktivasyon_kodlari/' + code);
+        get(userRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                document.getElementById('displayName').innerText = data.sahibi;
+                document.getElementById('displayPlate').innerText = data.plaka;
+                document.getElementById('displayModel').innerText = data.arac_model;
+                document.getElementById('callLink').href = "tel:" + data.telefon;
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('mainCard').style.display = 'block';
+            } else {
+                document.getElementById('loading').innerText = "Profil bulunamadı.";
+            }
+        });
+    </script>
 </body>
 </html>

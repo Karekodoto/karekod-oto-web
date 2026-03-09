@@ -3,44 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karekod Oto | Profil Oluştur</title>
+    <title>Karekod Oto | Profilini Özelleştir</title>
     <style>
         :root { --gold: #d4af37; --dark: #0a0a0a; }
-        body { background-color: var(--dark); color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .card { background: #151515; border: 1px solid var(--gold); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; }
-        .logo { color: var(--gold); font-size: 24px; font-weight: bold; margin-bottom: 20px; }
-        h2 { font-size: 18px; margin-bottom: 20px; color: #ccc; }
-        .input-group { text-align: left; margin-bottom: 15px; }
-        label { display: block; font-size: 12px; color: var(--gold); margin-bottom: 5px; margin-left: 5px; }
-        input { width: 100%; background: #222; border: 1px solid #333; padding: 12px; border-radius: 10px; color: #fff; font-size: 16px; box-sizing: border-box; }
-        .btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
-        #status { margin-top: 15px; font-size: 14px; }
+        body { background-color: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .card { background: #151515; border: 1px solid var(--gold); padding: 30px; border-radius: 25px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { color: var(--gold); text-align: center; margin-bottom: 25px; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; color: var(--gold); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        input, select { width: 100%; background: #222; border: 1px solid #333; padding: 12px; border-radius: 10px; color: #fff; font-size: 16px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--gold); }
+
+        .brand-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .brand-option { background: #222; border: 1px solid #333; padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .brand-option.selected { border-color: var(--gold); background: rgba(212, 175, 55, 0.1); }
+        .brand-option img { width: 30px; height: 30px; object-fit: contain; }
+
+        .btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 20px; transition: 0.3s; }
+        .btn:hover { background: #f1c40f; transform: scale(1.02); }
+        #status { text-align: center; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <div class="logo">KAREKOD OTO</div>
-        <h2>Sürücü Bilgilerini Kaydet</h2>
+        <h2>🚗 Sürücü Profilini Kur</h2>
         
         <div class="input-group">
-            <label>AD SOYAD</label>
-            <input type="text" id="name" placeholder="Örn: Ahmet Yılmaz">
+            <label>Ad Soyad</label>
+            <input type="text" id="name" placeholder="Örn: Mehmet Anlı">
         </div>
 
         <div class="input-group">
-            <label>TELEFON NUMARASI</label>
-            <input type="tel" id="phone" placeholder="05XX XXX XX XX">
+            <label>Telefon Numarası</label>
+            <input type="tel" id="phone" placeholder="05xx xxx xx xx">
         </div>
 
         <div class="input-group">
-            <label>ARAÇ PLAKASI</label>
+            <label>Araç Plakası</label>
             <input type="text" id="plate" placeholder="34 ABC 123">
         </div>
 
         <div class="input-group">
-            <label>ARAÇ MODELİ (Opsiyonel)</label>
-            <input type="text" id="model" placeholder="Örn: Passat 2023">
+            <label>Araç Markası Seçin</label>
+            <div class="brand-grid" id="brandGrid">
+                </div>
+        </div>
+
+        <div class="input-group">
+            <label>Araç Modeli (Opsiyonel)</label>
+            <input type="text" id="model" placeholder="Örn: Passat 2025">
         </div>
 
         <button class="btn" id="saveBtn">PROFİLİ OLUŞTUR VE BİTİR</button>
@@ -53,21 +66,41 @@
 
         const firebaseConfig = {
             apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
-            authDomain: "karekod-oto.firebaseapp.com",
             databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "karekod-oto",
-            storageBucket: "karekod-oto.firebasestorage.app",
-            messagingSenderId: "899053328801",
-            appId: "1:899053328801:web:1076904672226ae01513e0"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Bir önceki sayfadan gelen kodu hatırla (Basitlik için şimdilik manuel test edebilirsin)
-        // Normalde buraya URL üzerinden kod gelecek.
+        // Marka Listesi ve Logolar
+        const brands = [
+            { name: "VW", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg" },
+            { name: "BMW", logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" },
+            { name: "Mercedes", logo: "https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg" },
+            { name: "Audi", logo: "https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg" },
+            { name: "Fiat", logo: "https://upload.wikimedia.org/wikipedia/commons/1/12/Fiat_logo.svg" },
+            { name: "Renault", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg" }
+        ];
+
+        const brandGrid = document.getElementById('brandGrid');
+        let selectedLogo = "default";
+
+        // Markaları ekrana bas
+        brands.forEach(b => {
+            const div = document.createElement('div');
+            div.className = 'brand-option';
+            div.innerHTML = `<img src="${b.logo}"><br><small>${b.name}</small>`;
+            div.onclick = () => {
+                document.querySelectorAll('.brand-option').forEach(el => el.classList.remove('selected'));
+                div.classList.add('selected');
+                selectedLogo = b.logo;
+            };
+            brandGrid.appendChild(div);
+        });
+
+        // URL'den kodu al
         const urlParams = new URLSearchParams(window.location.search);
-        const activeCode = urlParams.get('code') || "123456"; 
+        const code = urlParams.get('code');
 
         document.getElementById('saveBtn').onclick = async () => {
             const name = document.getElementById('name').value;
@@ -77,33 +110,31 @@
             const status = document.getElementById('status');
 
             if(!name || !phone || !plate) {
-                status.style.color = "red";
-                status.innerText = "Lütfen zorunlu alanları doldurun!";
+                alert("Lütfen zorunlu alanları doldurun!");
                 return;
             }
 
             status.innerText = "Kaydediliyor...";
 
             try {
-                // Veritabanında o kodun altına bilgileri yazıyoruz
-                await update(ref(db, 'aktivasyon_kodlari/' + activeCode), {
+                await update(ref(db, 'aktivasyon_kodlari/' + code), {
                     sahibi: name,
                     telefon: phone,
                     plaka: plate,
                     arac_model: model,
+                    logo: selectedLogo, // Seçilen logoyu kaydediyoruz!
                     durum: "kullanildi"
                 });
-
-                status.style.color = "gold";
+                status.style.color = "#25d366";
                 status.innerText = "Profil Başarıyla Oluşturuldu!";
                 
                 setTimeout(() => {
-                    alert("Tebrikler! Artık bu QR kod sizin profilinize bağlı.");
-                    // window.location.href = "kartvizit.html"; // Final sayfası
+                    window.location.href = "index.html?id=" + code;
                 }, 2000);
 
-            } catch (error) {
-                status.innerText = "Hata oluştu: " + error.message;
+            } catch (e) {
+                status.innerText = "Hata oluştu!";
+                console.error(e);
             }
         };
     </script>

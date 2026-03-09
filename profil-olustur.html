@@ -3,243 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VIP QR STUDIO PRO V50.0</title>
+    <title>VIP STUDIO V110 - MOBILE PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Dancing+Script:wght@700&family=Cinzel:wght@900&family=Black+Ops+One&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #050505; --panel-bg: #0f0f0f; }
-        body { font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; margin: 0; background: var(--bg); color: white; overflow: hidden; }
+        :root { --gold: #d4af37; --panel-bg: #0d0d0d; --card-dark: #151515; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* Panel Tasarımı */
-        #panel { width: 440px; padding: 25px; border-right: 2px solid var(--gold); overflow-y: auto; background: var(--panel-bg); z-index: 10; box-sizing: border-box; }
-        #preview { flex-grow: 1; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); position: relative; }
+        body { margin: 0; background: #000; color: white; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+
+        /* MOBİL SEKME MENÜSÜ (Sadece Mobilde Görünür) */
+        .mobile-tabs { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 60px; background: #111; z-index: 1000; border-bottom: 1px solid #222; }
+        .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; color: #666; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .tab-btn.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+
+        /* SOL PANEL (KONTROLLER) */
+        #panel { width: 420px; background: var(--panel-bg); border-right: 1px solid #222; padding: 20px; overflow-y: auto; height: 100%; }
         
-        @media (max-width: 950px) {
-            body { flex-direction: column; overflow-y: auto; }
-            #panel { width: 100%; height: auto; border-right: none; border-bottom: 2px solid var(--gold); }
-            #preview { height: 720px; padding: 20px; }
+        /* SAĞ PANEL (ÖNİZLEME) */
+        #preview-area { flex: 1; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); position: relative; height: 100%; }
+
+        .section-header { color: var(--gold); font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin: 20px 0 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .control-box { background: var(--card-dark); padding: 15px; border-radius: 12px; border: 1px solid #222; margin-bottom: 15px; }
+        
+        label { font-size: 10px; color: #777; display: block; margin-bottom: 6px; font-weight: bold; }
+        input, select { width: 100%; background: #000; border: 1px solid #333; padding: 12px; color: white; border-radius: 8px; font-size: 14px; margin-bottom: 10px; outline: none; }
+        
+        .upload-btn { background: #1a1a1a; border: 2px dashed #333; padding: 15px; text-align: center; border-radius: 10px; cursor: pointer; font-size: 12px; color: #888; }
+        
+        .btn-save { background: linear-gradient(45deg, #d4af37, #f2d06b); color: black; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+
+        /* TELEFON SİMÜLATÖRÜ */
+        .phone-container { transform: scale(0.9); transition: 0.3s; }
+        .phone-frame { width: 340px; height: 680px; background: #000; border: 10px solid #222; border-radius: 50px; position: relative; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.8); }
+        #iframe-preview { width: 100%; height: 100%; border: none; }
+
+        /* MOBİL GÖRÜNÜM (RESPONSIVE) */
+        @media (max-width: 900px) {
+            body { flex-direction: column; padding-top: 60px; }
+            .mobile-tabs { display: flex; }
+            #panel, #preview-area { width: 100%; position: absolute; top: 60px; left: 0; height: calc(100vh - 60px); }
+            #preview-area { display: none; } /* Başlangıçta gizle */
+            #preview-area.active { display: flex; }
+            #panel.hidden { display: none; }
+            .phone-container { transform: scale(0.7); } /* Küçük ekranlarda sığdır */
+            .control-box:last-child { margin-bottom: 80px; } /* Buton için boşluk */
         }
-
-        h2 { color: var(--gold); text-align: center; text-transform: uppercase; letter-spacing: 4px; margin-top: 0; padding-bottom: 15px; border-bottom: 2px solid var(--gold); font-size: 1.3rem; }
-        .section-title { color: var(--gold); font-size: 11px; border-bottom: 1px solid #333; padding-bottom: 5px; margin: 25px 0 12px; font-weight: bold; letter-spacing: 1.5px; display: flex; align-items: center; gap: 10px; }
-        
-        .control-box { background: #161616; padding: 18px; border-radius: 18px; border: 1px solid #252525; margin-bottom: 15px; transition: 0.3s; }
-        .control-box:hover { border-color: #444; }
-        
-        label { font-size: 10px; color: #777; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px; }
-        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; font-size: 14px; margin-bottom: 10px; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--gold); background: #222; }
-        
-        .file-upload { background: #222; border: 2px dashed #444; padding: 15px; text-align: center; border-radius: 12px; cursor: pointer; font-size: 12px; transition: 0.3s; color: #888; }
-        .file-upload:hover { border-color: var(--gold); color: #fff; background: #252525; }
-
-        .btn-save { background: linear-gradient(45deg, #d4af37, #f2d06b); color: black; padding: 22px; width: 100%; border: none; font-weight: 900; cursor: pointer; border-radius: 18px; font-size: 17px; transition: 0.4s; text-transform: uppercase; margin-top: 35px; box-shadow: 0 10px 25px rgba(212,175,55,0.25); display: flex; align-items: center; justify-content: center; gap: 12px; }
-        .btn-save:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(212,175,55,0.4); background: #fff; }
-        
-        iframe { width: 380px; height: 680px; border: none; border-radius: 50px; box-shadow: 0 0 70px rgba(0,0,0,0.8); background: #000; }
-        
-        /* Range Slider Stil */
-        input[type="range"] { -webkit-appearance: none; height: 6px; background: #333; border: none; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; cursor: pointer; }
     </style>
 </head>
 <body>
 
+<div class="mobile-tabs">
+    <div class="tab-btn active" id="tab-edit" onclick="switchTab('edit')"><i class="fas fa-edit"></i> DÜZENLE</div>
+    <div class="tab-btn" id="tab-view" onclick="switchTab('view')"><i class="fas fa-eye"></i> ÖNİZLEME</div>
+</div>
+
 <div id="panel">
-    <h2>VIP STUDIO PRO</h2>
+    <h2 style="color:var(--gold); text-align:center; letter-spacing:3px; margin:0 0 20px 0; font-size:18px;">VIP STUDIO V110</h2>
     
-    <div class="section-title"><i class="fas fa-car-side"></i> 1. MARKA & PLAKA AYARLARI</div>
+    <div class="section-header">1. LOGO & ŞEFFAFLIK</div>
     <div class="control-box">
-        <label>MARKA LOGOSU</label>
-        <select id="in-brand" onchange="update()">
-            <option value="https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg">Volkswagen</option>
-            <option value="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg">BMW</option>
-            <option value="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg">Mercedes</option>
-            <option value="https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg">Audi</option>
-            <option value="https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg">Renault</option>
-            <option value="custom">-- KENDİ LOGONU YÜKLE --</option>
+        <div class="upload-btn" onclick="document.getElementById('logo-upload').click()">LOGO SEÇ</div>
+        <input type="file" id="logo-upload" hidden accept="image/*" onchange="processLogo(this)">
+        <label style="margin-top:12px;">BEYAZLIK SİL: <span id="th-val" style="color:var(--gold)">0</span></label>
+        <input type="range" id="logo-threshold" min="0" max="255" value="0" oninput="applyLogoFix()">
+    </div>
+
+    <div class="section-header">2. TEMA</div>
+    <div class="control-box">
+        <select id="bg-preset" onchange="setPreset(this.value)">
+            <option value="animated-gold">Altın Akış</option>
+            <option value="rainbow">RGB Renkli</option>
+            <option value="solid-black">Saf Siyah</option>
+            <option value="solid-white">Saf Beyaz</option>
+            <option value="custom">-- Kendi Arka Planın --</option>
         </select>
-        
-        <div id="custom-logo-area" style="display:none; margin-top:10px;">
-            <input type="file" id="logo-file" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
-            <div class="file-upload" onclick="document.getElementById('logo-file').click()">
-                <i class="fas fa-upload"></i> PNG LOGO SEÇ
-            </div>
+        <div id="custom-bg-area" style="display:none;">
+            <div class="upload-btn" onclick="document.getElementById('bg-upload').click()">GALERİDEN SEÇ</div>
+            <input type="file" id="bg-upload" hidden accept="image/*,video/*" onchange="handleBg(this)">
         </div>
-
-        <label style="margin-top:15px;">PLAKA NO</label>
-        <input type="text" id="in-plaka" value="34 VIP 01" oninput="update()">
     </div>
 
-    <div class="section-title"><i class="fas fa-magic"></i> 2. GÖRSEL EFEKTLER & TEMA</div>
+    <div class="section-header">3. BİLGİLER</div>
     <div class="control-box">
-        <label>ARKA PLAN TÜRÜ</label>
-        <select id="in-bg-theme" onchange="update()">
-            <optgroup label="HAREKETLİ VİDEOLAR">
-                <option value="vid_gold" selected>Premium Gold</option>
-                <option value="vid_ocean">Deep Ocean</option>
-                <option value="vid_space">Cyber Space</option>
-                <option value="vid_rain">Rainy Night</option>
-            </optgroup>
-            <optgroup label="GRADYEN RENKLER">
-                <option value="grad_dark">Dark Carbon</option>
-                <option value="grad_royal">Royal Purple</option>
-            </optgroup>
-        </select>
+        <input type="text" id="p-name" placeholder="Ad Soyad" value="AD SOYAD" oninput="liveUpdate()">
+        <input type="tel" id="p-tel" placeholder="Telefon (05XX...)" oninput="liveUpdate()">
+        <input type="text" id="p-insta" placeholder="Instagram (@Kullanıcı)" oninput="liveUpdate()">
+    </div>
+
+    <div class="section-header">4. KART & FONT</div>
+    <div class="control-box">
+        <label>KART ŞEFFAFLIĞI: <span id="op-val" style="color:var(--gold)">0.7</span></label>
+        <input type="range" id="p-opacity" min="0" max="1" step="0.01" value="0.7" oninput="liveUpdate()">
         
-        <label>KART ŞEFFAFLIĞI: <span id="op-val">0.85</span></label>
-        <input type="range" id="in-opacity" min="0.05" max="1" step="0.01" value="0.85" oninput="update()">
+        <label>YAZI TİPİ</label>
+        <select id="p-font" onchange="liveUpdate()">
+            <option value="'Montserrat'">Montserrat</option>
+            <option value="'Cinzel'">Cinzel</option>
+            <option value="'Orbitron'">Orbitron</option>
+            <option value="'Bebas Neue'">Bebas Neue</option>
+        </select>
+
+        <label>İSİM RENGİ</label>
+        <input type="color" id="p-color" value="#d4af37" oninput="liveUpdate()">
     </div>
 
-    <div class="section-title"><i class="fas fa-palette"></i> 3. RENK & FONT SANATI</div>
+    <div class="section-header">5. PLAKA</div>
     <div class="control-box">
-        <label>TEMA RENGİ (İSİM & BUTONLAR)</label>
-        <input type="color" id="in-name-color" value="#d4af37" oninput="update()">
-        
-        <label style="margin-top:10px;">FONT SEÇİMİ</label>
-        <select id="in-font" onchange="update()">
-            <option value="'Montserrat'">Modern (Montserrat)</option>
-            <option value="'Cinzel'">Lüks (Cinzel)</option>
-            <option value="'Orbitron'">Cyber (Orbitron)</option>
-            <option value="'Dancing Script'">Elegant (El Yazısı)</option>
-        </select>
+        <input type="text" id="p-plate" value="34 VIP 01" oninput="liveUpdate()">
+        <label style="display:flex; align-items:center; gap:8px; color:#e30a17; font-size:12px;">
+            <input type="checkbox" id="red-tr" onchange="liveUpdate()"> KIRMIZI TR (TÜRK BAYRAĞI)
+        </label>
     </div>
 
-    <div class="section-title"><i class="fas fa-user-shield"></i> 4. EK DETAYLAR</div>
-    <div class="control-box">
-        <label>TAKIM LOGOSU</label>
-        <select id="in-team" onchange="update()">
-            <option value="">Yok</option>
-            <option value="gs">Galatasaray</option><option value="fb">Fenerbahçe</option>
-            <option value="bjk">Beşiktaş</option><option value="ts">Trabzonspor</option>
-        </select>
-        <label>KAN GRUBU</label>
-        <select id="in-kan" onchange="update()">
-            <option value="">Belirtme</option>
-            <option value="A Rh+">A Rh+</option><option value="B Rh+">B Rh+</option>
-            <option value="0 Rh+">0 Rh+</option><option value="AB Rh+">AB Rh+</option>
-        </select>
-    </div>
-
-    <div class="section-title"><i class="fas fa-address-book"></i> 5. İLETİŞİM</div>
-    <div class="control-box">
-        <input type="text" id="in-isim" value="SÜRÜCÜ ADI" oninput="update()">
-        <input type="tel" id="in-tel" value="" placeholder="Telefon No (05xx...)" oninput="update()">
-    </div>
-    
-    <button class="btn-save" id="saveBtn"><i class="fas fa-gem"></i> TASARIMI ONAYLA VE KAYDET</button>
+    <button class="btn-save"><i class="fas fa-check"></i> KAYDET</button>
 </div>
 
-<div id="preview">
-    <iframe id="kart-frame"></iframe>
+<div id="preview-area">
+    <div class="phone-container">
+        <div class="phone-frame">
+            <iframe id="iframe-preview"></iframe>
+        </div>
+    </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getDatabase, ref, update as fbUpdate } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+<canvas id="logoCanvas" style="display:none;"></canvas>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
-        databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+<script>
+    let originalLogo = null, processedLogo = "", bgData = "", isBgVideo = false, currentPreset = "animated-gold";
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+    // MOBİL SEKME GEÇİŞİ
+    function switchTab(tab) {
+        document.getElementById('tab-edit').classList.toggle('active', tab === 'edit');
+        document.getElementById('tab-view').classList.toggle('active', tab === 'view');
+        document.getElementById('panel').classList.toggle('hidden', tab === 'view');
+        document.getElementById('preview-area').classList.toggle('active', tab === 'view');
+    }
 
-    let customLogoBase64 = "";
-
-    window.handleLogoUpload = function(input) {
+    function processLogo(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = (e) => { customLogoBase64 = e.target.result; update(); };
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => { originalLogo = img; applyLogoFix(); };
+                img.src = e.target.result;
+            };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    window.update = function() {
-        const brandSel = document.getElementById('in-brand');
-        document.getElementById('custom-logo-area').style.display = (brandSel.value === 'custom') ? 'block' : 'none';
+    function applyLogoFix() {
+        if (!originalLogo) return;
+        const th = document.getElementById('logo-threshold').value;
+        document.getElementById('th-val').innerText = th;
+        const canvas = document.getElementById('logoCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = originalLogo.width; canvas.height = originalLogo.height;
+        ctx.drawImage(originalLogo, 0, 0);
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i] > th && data[i+1] > th && data[i+2] > th) data[i+3] = 0;
+        }
+        ctx.putImageData(imgData, 0, 0);
+        processedLogo = canvas.toDataURL();
+        liveUpdate();
+    }
 
-        const op = document.getElementById('in-opacity').value;
+    function handleBg(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            isBgVideo = file.type.startsWith('video');
+            const reader = new FileReader();
+            reader.onload = (e) => { bgData = e.target.result; currentPreset = "custom"; liveUpdate(); };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function setPreset(val) {
+        currentPreset = val;
+        document.getElementById('custom-bg-area').style.display = (val === 'custom') ? 'block' : 'none';
+        liveUpdate();
+    }
+
+    function liveUpdate() {
+        const op = document.getElementById('p-opacity').value;
         document.getElementById('op-val').innerText = op;
-
         const d = {
-            isim: document.getElementById('in-isim').value,
-            plaka: document.getElementById('in-plaka').value,
-            tel: document.getElementById('in-tel').value,
-            kan: document.getElementById('in-kan').value,
-            brand: (brandSel.value === 'custom') ? customLogoBase64 : brandSel.value,
-            font: document.getElementById('in-font').value,
-            nCol: document.getElementById('in-name-color').value,
-            team: document.getElementById('in-team').value,
-            theme: document.getElementById('in-bg-theme').value,
-            op: op
+            name: document.getElementById('p-name').value,
+            tel: document.getElementById('p-tel').value,
+            insta: document.getElementById('p-insta').value.replace('@',''),
+            plate: document.getElementById('p-plate').value,
+            font: document.getElementById('p-font').value,
+            color: document.getElementById('p-color').value,
+            redTr: document.getElementById('red-tr').checked
         };
 
-        const themes = {
-            vid_gold: "https://player.vimeo.com/external/440536785.sd.mp4?s=637c22345091694f27d5f0e1d51543ec8b495914&profile_id=139",
-            vid_ocean: "https://player.vimeo.com/external/370331493.sd.mp4?s=3307581692ec1861053001804d9136113b2e5a49&profile_id=139",
-            vid_space: "https://player.vimeo.com/external/415510651.sd.mp4?s=f520b22a6136e4f323ec910606d5c5f8b9696c6b&profile_id=139",
-            vid_rain: "https://player.vimeo.com/external/510850877.sd.mp4?s=d99436709f1969a53826019a797c554341982703&profile_id=139",
-            grad_dark: "linear-gradient(135deg, #1a1a1a 0%, #000 100%)",
-            grad_royal: "linear-gradient(135deg, #2b1055 0%, #000 100%)"
-        };
-        const teamL = { gs: "https://img.icons8.com/color/144/galatasaray.png", fb: "https://img.icons8.com/color/144/fenerbahce.png", bjk: "https://img.icons8.com/color/144/besiktas.png", ts: "https://img.icons8.com/color/144/trabzonspor.png" };
+        let bgStyle = "";
+        if(currentPreset === "rainbow") bgStyle = "background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); background-size: 400% 400%; animation: gradient 8s ease infinite;";
+        else if(currentPreset === "animated-gold") bgStyle = "background: linear-gradient(-45deg, #000, #1a1a1a, #d4af37, #000); background-size: 400% 400%; animation: gradient 10s ease infinite;";
+        else if(currentPreset === "solid-black") bgStyle = "background: #000;";
+        else if(currentPreset === "solid-white") bgStyle = "background: #fff;";
 
-        const temp = `
+        const doc = `
         <!DOCTYPE html><html><head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Cinzel:wght@900&family=Orbitron:wght@900&family=Bebas+Neue&display=swap" rel="stylesheet">
         <style>
-            body{margin:0; height:100vh; display:flex; justify-content:center; align-items:center; background:${d.theme.startsWith('grad') ? themes[d.theme] : '#000'}; font-family:${d.font}, sans-serif; overflow:hidden;}
-            video{position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; opacity:0.65;}
-            .card{width:300px; background:rgba(0,0,0,${d.op}); backdrop-filter:blur(25px); padding:45px 25px; border-radius:55px; text-align:center; color:white; border:1px solid rgba(255,255,255,0.12); box-shadow:0 40px 80px rgba(0,0,0,0.9);}
-            .logo img{max-height:70px; max-width:210px; margin-bottom:20px; filter: drop-shadow(0 0 15px ${d.nCol}55);}
-            .plate{background:white; color:black; display:inline-flex; font-weight:900; font-size:24px; border-radius:10px; overflow:hidden; border:2.5px solid ${d.nCol}; margin:20px 0; font-family:Arial, sans-serif;}
-            .plate-tr{background:#003399; color:white; width:25px; font-size:11px; display:flex; align-items:center; justify-content:center;}
-            .plate-no{padding:7px 18px;}
-            h1{font-size:28px; color:${d.nCol}; text-transform:uppercase; margin:15px 0; text-shadow:0 0 20px ${d.nCol}33;}
-            .kan{background:#e30a17; padding:6px 16px; border-radius:30px; font-size:13px; font-weight:bold; display:inline-block; margin-bottom:15px; box-shadow:0 5px 15px rgba(227,10,23,0.3);}
-            .btn{display:flex; align-items:center; justify-content:center; gap:12px; padding:20px; background:${d.nCol}; color:${d.nCol === '#ffffff' ? '#000' : '#fff'}; text-decoration:none; border-radius:22px; font-weight:900; font-size:18px; margin-top:20px; box-shadow:0 15px 30px rgba(0,0,0,0.4);}
+            @keyframes gradient { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
+            body { margin:0; height:100vh; overflow:hidden; display:flex; align-items:center; justify-content:center; ${currentPreset !== 'custom' ? bgStyle : 'background:#000'}; font-family:${d.font}, sans-serif; }
+            .bg-custom { position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; }
+            .card { 
+                width:85vw; max-width:290px; padding:40px 20px; border-radius:40px; text-align:center;
+                background: rgba(0,0,0, ${op}); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+                border: ${op > 0 ? '1px solid rgba(255,255,255,0.1)' : 'none'};
+            }
+            .logo img { max-height:70px; margin-bottom:20px; }
+            .plate { background:white; color:black; display:inline-flex; border-radius:8px; overflow:hidden; border:2px solid ${d.color}; margin-bottom:20px; font-weight:900; font-family:Arial; }
+            .plate-tr { background:${d.redTr ? '#e30a17' : '#003399'}; color:white; padding:5px 8px; font-size:11px; display:flex; align-items:center; }
+            .plate-no { padding:5px 12px; font-size:20px; }
+            h1 { font-size:24px; color:${d.color}; text-transform:uppercase; margin:10px 0; }
+            .btn-group { display:flex; flex-direction:column; gap:10px; margin-top:20px; }
+            .btn { display:flex; align-items:center; justify-content:center; gap:10px; padding:16px; border-radius:20px; text-decoration:none; font-weight:bold; color:white; font-size:15px; }
+            .btn-call { background:#2ecc71; }
+            .btn-insta { background:linear-gradient(45deg, #f09433, #bc1888); }
         </style>
         </head><body>
-        ${d.theme.startsWith('vid') ? `<video autoplay muted loop playsinline><source src="${themes[d.theme]}"></video>` : ''}
-        <div class="card">
-            <div class="logo"><img src="${d.brand || 'https://via.placeholder.com/150?text=LOGO'}"></div>
-            <div style="height:60px; margin-bottom:15px;">${d.team ? `<img src="${teamL[d.team]}" style="height:60px;">` : ''}</div>
-            <div class="plate"><div class="plate-tr">TR</div><div class="plate-no">${d.plaka}</div></div><br>
-            ${d.kan ? `<div class="kan"><i class="fas fa-tint"></i> ${d.kan}</div>` : ''}
-            <h1>${d.isim}</h1>
-            <a href="#" class="btn"><i class="fas fa-phone-alt"></i> SÜRÜCÜYÜ ARA</a>
-        </div>
+            ${currentPreset === 'custom' && bgData ? (isBgVideo ? `<video class="bg-custom" src="${bgData}" autoplay muted loop playsinline></video>` : `<img class="bg-custom" src="${bgData}">`) : ''}
+            <div class="card">
+                <div class="logo">${processedLogo ? `<img src="${processedLogo}">` : ''}</div>
+                <div class="plate"><div class="plate-tr">TR</div><div class="plate-no">${d.plate}</div></div>
+                <h1>${d.name}</h1>
+                <div class="btn-group">
+                    <a href="tel:${d.tel}" class="btn btn-call"><i class="fas fa-phone"></i> SÜRÜCÜYÜ ARA</a>
+                    ${d.insta ? `<a href="https://instagram.com/${d.insta}" class="btn btn-insta"><i class="fab fa-instagram"></i> INSTAGRAM</a>` : ''}
+                </div>
+            </div>
         </body></html>`;
-
-        document.getElementById('kart-frame').srcdoc = temp;
-    };
-
-    document.getElementById('saveBtn').onclick = async () => {
-        if(!code) return alert("Kod Bulunamadı!");
-        const data = {
-            sahibi: document.getElementById('in-isim').value,
-            plaka: document.getElementById('in-plaka').value,
-            telefon: document.getElementById('in-tel').value,
-            kan: document.getElementById('in-kan').value,
-            logo: (document.getElementById('in-brand').value === 'custom') ? customLogoBase64 : document.getElementById('in-brand').value,
-            font: document.getElementById('in-font').value,
-            nCol: document.getElementById('in-name-color').value,
-            takim: document.getElementById('in-team').value,
-            tema: document.getElementById('in-bg-theme').value,
-            seffaflik: document.getElementById('in-opacity').value,
-            durum: "kullanildi"
-        };
-        try {
-            await fbUpdate(ref(db, 'aktivasyon_kodlari/' + code), data);
-            alert("VIP PROFiL AKTİF EDİLDİ!");
-            window.location.href = "index.html?id=" + code;
-        } catch(e) { alert("Hata!"); }
-    };
-    update();
+        document.getElementById('iframe-preview').srcdoc = doc;
+    }
+    liveUpdate();
 </script>
 </body>
 </html>

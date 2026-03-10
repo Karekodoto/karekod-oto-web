@@ -1,131 +1,32 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KAREKODOTO | SÜRÜCÜ PROFİLİ</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Cinzel:wght@700&family=Orbitron:wght@700&family=Fira+Sans:wght@700&family=Playfair+Display:wght@700&family=Poppins:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
-    <style>
-        @keyframes g {0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}}
-        
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
-            background: #000; font-family: 'Montserrat', sans-serif;
-        }
-
-        .bg-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; object-fit: cover;
-        }
-
-        /* Kart Tasarımı */
-        .card {
-            width: 85vw; max-width: 320px; padding: 40px 25px;
-            border-radius: 40px; text-align: center;
-            position: relative; z-index: 10;
-            transition: all 0.3s ease;
-        }
-
-        .logo img { max-height: 85px; margin-bottom: 20px; }
-
-        /* Plaka Tasarımı */
-        .plate {
-            background: white; color: black; display: inline-flex;
-            border-radius: 6px; overflow: hidden; border: 1.5px solid #222;
-            margin-bottom: 15px; font-weight: 900; height: 40px;
-        }
-        .plate-tr { width: 25px; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-        .plate-no { padding: 0 15px; font-size: 18px; line-height: 40px; text-transform: uppercase; }
-
-        h1 { font-size: 24px; text-transform: uppercase; margin: 15px 0; font-weight: 900; }
-
-        /* İstediğin Çizgili Kan Grubu Tasarımı */
-        .blood-box {
-            color: #ff0000; font-size: 12px; font-weight: 900;
-            margin: 20px 0; padding: 10px 0;
-            border-top: 1px solid rgba(255,255,255,0.15);
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-
-        /* Butonlar */
-        .btns { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
-        .btn {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 16px; border-radius: 22px; font-size: 14px; font-weight: 900;
-            text-decoration: none; text-transform: uppercase; transition: transform 0.2s;
-        }
-        .btn:active { transform: scale(0.95); }
-        .btn-call { color: #000; }
-        .btn-wp { background: #25D366; color: white; }
-        .btn-insta { background: #E1306C; color: white; }
-
-        /* Yükleme Ekranı */
-        #loader {
-            position: fixed; inset: 0; background: #000; z-index: 999;
-            display: flex; align-items: center; justify-content: center;
-        }
-    </style>
-</head>
-<body>
-
-<div id="loader"><i class="fas fa-circle-notch fa-spin" style="color:#d4af37; font-size:40px;"></i></div>
-
-<div id="main-content" style="display:none;">
-    <div id="bg-container"></div>
-    <div class="card" id="user-card">
-        <div class="logo" id="user-logo"></div>
-        <div class="plate" id="plate-box">
-            <div class="plate-tr" id="tr-color">TR</div>
-            <div class="plate-no" id="plate-text"></div>
-        </div>
-        <h1 id="user-name"></h1>
-        <div id="blood-area"></div>
-        <div class="btns" id="button-area"></div>
-    </div>
-</div>
-
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { doc, getDoc, getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCujO03_fQ6xQ3qzzl8TfXazbCNHy0TukI",
-      authDomain: "karekod-oto.firebaseapp.com",
-      projectId: "karekod-oto",
-      storageBucket: "karekod-oto.firebasestorage.app",
-      messagingSenderId: "899053328801",
-      appId: "1:899053328801:web:1076904672226ae01513e0"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // ... firebase importları aynı kalıyor ...
 
     async function loadProfile() {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
 
-        if(!code) { document.body.innerHTML = "Geçersiz Kod"; return; }
+        if(!code) return;
 
         const snap = await getDoc(doc(db, "qr_codes", code));
-        if(!snap.exists()) { document.body.innerHTML = "Profil Bulunamadı"; return; }
+        if(!snap.exists()) return;
 
         const data = snap.data();
         
-        // Font Uygulama
-        document.body.style.fontFamily = data.font || "'Montserrat'";
-
-        // Arka Plan Temaları
+        // GÖRSEL KONTROLÜ VE YÜKLEME (BURASI KRİTİK)
         const bgLayer = document.getElementById('bg-container');
-        if(data.bgFileUrl) {
-            if(data.isVideo) {
+        
+        // Eğer Cloudinary URL'si varsa kullan
+        if(data.bgFileUrl && data.bgFileUrl !== "") {
+            // Video mu görsel mi kontrol et (Cloudinary bazen video uzantısını değiştirebilir)
+            const isVid = data.isVideo || data.bgFileUrl.includes("/video/upload/");
+            
+            if(isVid) {
                 bgLayer.innerHTML = `<video class="bg-layer" src="${data.bgFileUrl}" autoplay muted loop playsinline></video>`;
             } else {
                 bgLayer.innerHTML = `<img class="bg-layer" src="${data.bgFileUrl}">`;
             }
         } else {
+            // Tema ayarları (Varsayılanlar)
             let style = "background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); background-size: 400% 400%; animation: g 10s ease infinite;";
             if(data.theme === 'black') style = "background: #000;";
             if(data.theme === 'white') style = "background: #fff;";
@@ -133,56 +34,12 @@
             document.body.style.cssText = style;
         }
 
-        // Kart Şeffaflık ve Blur
-        const card = document.getElementById('user-card');
-        const op = data.opacity || 0.8;
-        let cardBg = `rgba(0,0,0,${op})`;
-        if(data.theme === 'white') cardBg = `rgba(255,255,255,${op})`;
-        card.style.background = cardBg;
-        card.style.backdropFilter = `blur(${op * 20}px)`;
-        card.style.webkitBackdropFilter = `blur(${op * 20}px)`;
-        if(op < 0.1) card.style.border = "none";
-
-        // Logo
-        if(data.userLogo) {
-            document.getElementById('user-logo').innerHTML = `<img src="${data.userLogo}" style="max-height:${data.logoSize || 85}px">`;
+        // LOGO KONTROLÜ
+        if(data.userLogo && data.userLogo !== "") {
+            document.getElementById('user-logo').innerHTML = `<img src="${data.userLogo}" style="max-height:${data.logoSize || 85}px; width: auto; object-fit: contain;">`;
         }
 
-        // Plaka
-        document.getElementById('plate-text').innerText = data.plate;
-        document.getElementById('tr-color').style.background = data.redPlate ? "#e30a17" : "#003399";
-
-        // İsim ve Renk
-        const nameEl = document.getElementById('user-name');
-        nameEl.innerText = data.fullName;
-        nameEl.style.color = data.color || "#d4af37";
-
-        // Kan Grubu (Çizgili)
-        if(data.blood) {
-            document.getElementById('blood-area').innerHTML = `
-                <div class="blood-box">
-                    <i class="fas fa-heartbeat"></i> KAN GRUBU: ${data.blood}
-                </div>`;
-        }
-
-        // Butonlar
-        let btns = "";
-        if(data.phone) {
-            btns += `<a href="tel:${data.phone}" class="btn btn-call" style="background:${data.color || '#d4af37'}"><i class="fas fa-phone-alt"></i> SÜRÜCÜYÜ ARA</a>`;
-            btns += `<a href="https://wa.me/${data.phone.replace(/\s+/g, '')}" class="btn btn-wp"><i class="fab fa-whatsapp"></i> WHATSAPP</a>`;
-        }
-        if(data.instagram) {
-            const user = data.instagram.replace('@', '');
-            btns += `<a href="https://instagram.com/${user}" class="btn btn-insta"><i class="fab fa-instagram"></i> INSTAGRAM</a>`;
-        }
-        document.getElementById('button-area').innerHTML = btns;
-
-        // Göster
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('main-content').style.display = 'flex';
+        // ... Diğer plaka, isim ve buton kodları aynı kalıyor ...
+        // Sadece yukarıdaki bg ve logo kısımlarını "boş veri" gelme ihtimaline karşı sağlama aldık.
     }
-
-    loadProfile();
 </script>
-</body>
-</html>

@@ -177,6 +177,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { doc, setDoc, getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCujO03_fQ6xQ3qzzl8TfXazbCNHy0TukI",
@@ -191,46 +192,73 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
-    // Kayıt Fonksiyonunu Global Yapıyoruz
     window.saveProfile = async function() {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         
         if(!code) { 
-            alert("Hata: URL'de kod bulunamadı! Lütfen sonuna ?code=TEST yazarak deneyin."); 
+            alert("Hata: URL'de kod bulunamadı!"); 
             return; 
         }
 
-        const data = {
-            fullName: document.getElementById('name').value,
-            phone: document.getElementById('phone').value,
-            instagram: document.getElementById('insta').value,
-            blood: document.getElementById('blood').value,
-            plate: document.getElementById('plate').value.toUpperCase(),
-            redPlate: document.getElementById('red-tr').checked,
-            theme: document.getElementById('theme-sel').value,
-            font: document.getElementById('font-sel').value,
-            color: document.getElementById('text-color-picker').value,
-            opacity: document.getElementById('opacity').value,
-            logoSize: document.getElementById('logo-size').value,
-            isActivated: true,
-            createdAt: new Date().toISOString()
-        };
+        const btn = document.querySelector('.btn-save');
+        btn.innerText = "YÜKLENİYOR... LÜTFEN BEKLEYİN";
+        btn.style.opacity = "0.5";
+        btn.disabled = true;
 
         try {
-            const btn = document.querySelector('.btn-save');
-            btn.innerText = "KAYDEDİLİYOR...";
-            btn.style.opacity = "0.5";
+            let finalLogoUrl = "";
+            let finalBgUrl = "";
+
+            // 1. LOGO YÜKLE (Kendi seçtiği dosya varsa)
+            const logoFile = document.getElementById('logo-in').files[0];
+            if(logoFile) {
+                const logoRef = ref(storage, `users/${code}/logo_${Date.now()}`);
+                await uploadBytes(logoRef, logoFile);
+                finalLogoUrl = await getDownloadURL(logoRef);
+            }
+
+            // 2. VİDEO VEYA ARKA PLAN YÜKLE
+            const bgFile = document.getElementById('bg-in').files[0];
+            if(bgFile) {
+                const bgRef = ref(storage, `users/${code}/background_${Date.now()}`);
+                await uploadBytes(bgRef, bgFile);
+                finalBgUrl = await getDownloadURL(bgRef);
+            }
+
+            const data = {
+                fullName: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                instagram: document.getElementById('insta').value,
+                blood: document.getElementById('blood').value,
+                plate: document.getElementById('plate').value.toUpperCase(),
+                redPlate: document.getElementById('red-tr').checked,
+                theme: document.getElementById('theme-sel').value,
+                font: document.getElementById('font-sel').value,
+                color: document.getElementById('text-color-picker').value,
+                opacity: document.getElementById('opacity').value,
+                logoSize: document.getElementById('logo-size').value,
+                // DOSYA URL'LERİ BURAYA KAYDOLUR
+                userLogo: finalLogoUrl,
+                bgFileUrl: finalBgUrl,
+                isVideo: bgFile ? bgFile.type.startsWith('video') : false,
+                isActivated: true,
+                createdAt: new Date().toISOString()
+            };
             
             await setDoc(doc(db, "qr_codes", code), data);
             
-            alert("Tebrikler! Profilin başarıyla buluta kaydedildi.");
-            btn.innerText = "SİPARİŞİ TAMAMLA";
-            btn.style.opacity = "1";
+            alert("Tebrikler! Dosyalar ve Profil başarıyla kaydedildi.");
+            window.location.href = `profil.html?code=${code}`;
+
         } catch (e) {
             console.error("Hata:", e);
             alert("Hata oluştu: " + e.message);
+            btn.innerText = "SİPARİŞİ TAMAMLA";
+            btn.style.opacity = "1";
+            btn.disabled = false;
         }
     };
 </script>

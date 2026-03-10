@@ -163,15 +163,23 @@
     const CLOUD_NAME = "dtivtwhkj";
     const UPLOAD_PRESET = "qr_yukle";
 
+    // TAMİR EDİLEN FONKSİYON: Video ve Resim ayrımını otomatik yapar
     async function uploadToCloud(fileOrData) {
         if (!fileOrData) return "";
         try {
             const formData = new FormData();
             formData.append("file", fileOrData);
             formData.append("upload_preset", UPLOAD_PRESET);
-            const isVideo = (typeof fileOrData !== 'string' && fileOrData.type && fileOrData.type.startsWith('video'));
-            const type = isVideo ? 'video' : 'image';
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${type}/upload`, { method: "POST", body: formData });
+            
+            // Dosya tipini kontrol et
+            let resourceType = "image";
+            if (fileOrData instanceof File && fileOrData.type.startsWith("video")) resourceType = "video";
+            if (typeof fileOrData === 'string' && fileOrData.startsWith('data:video')) resourceType = "video";
+
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`, { 
+                method: "POST", 
+                body: formData 
+            });
             const data = await res.json();
             return data.secure_url || "";
         } catch (e) { return ""; }
@@ -185,9 +193,15 @@
         btn.innerText = "YÜKLENİYOR..."; btn.disabled = true;
 
         try {
-            const bgFile = document.getElementById('bg-in').files[0];
+            const bgFileInput = document.getElementById('bg-in');
+            const bgFile = bgFileInput.files[0];
             const logoToUpload = window.processedLogo || document.getElementById('logo-in').files[0];
-            const [logoUrl, bgUrl] = await Promise.all([uploadToCloud(logoToUpload), uploadToCloud(bgFile)]);
+            
+            // Paralel yükleme başlat
+            const [logoUrl, bgUrl] = await Promise.all([
+                uploadToCloud(logoToUpload),
+                uploadToCloud(bgFile)
+            ]);
 
             const data = {
                 fullName: document.getElementById('name').value,
@@ -207,10 +221,15 @@
                 isActivated: true,
                 createdAt: new Date().toISOString()
             };
+            
             await setDoc(doc(db, "qr_codes", code), data);
             alert("Tebrikler! Sistem Aktif.");
             window.location.href = `profil.html?code=${code}`;
-        } catch (e) { alert("Hata!"); btn.innerText = "SİPARİŞİ TAMAMLA"; btn.disabled = false; }
+        } catch (e) { 
+            console.error(e);
+            alert("Hata!"); 
+            btn.innerText = "SİPARİŞİ TAMAMLA"; btn.disabled = false; 
+        }
     };
 </script>
 

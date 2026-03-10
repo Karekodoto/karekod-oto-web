@@ -2,152 +2,80 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Karekod Oto | VIP Kartvizit</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAREKODOTO | Giriş</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #000; }
-        
-        /* Dinamik Arka Plan Videosu */
-        #bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; object-fit: cover; opacity: 0.6; }
-
-        .overlay { height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; }
-        
-        .card { width: 85%; max-width: 340px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 35px 25px; border-radius: 45px; text-align: center; color: white; box-shadow: 0 25px 50px rgba(0,0,0,0.8); display: none; position: relative; }
-        
-        .logo img { height: 65px; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
-        
-        .plate-box { display: inline-flex; border: 2.5px solid #000; border-radius: 8px; overflow: hidden; background: #fff; margin: 15px 0; }
-        .plate-tr { background: #003399; color: #fff; width: 25px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px; }
-        .plate-no { color: #000; font-size: 24px; font-weight: 900; padding: 5px 15px; font-family: 'Arial Black', sans-serif; }
-
-        .kan-tag { background: #E30A17; color: #fff; padding: 5px 15px; border-radius: 50px; font-size: 13px; font-weight: bold; margin-bottom: 15px; display: inline-block; }
-        
-        h1 { font-size: 26px; margin: 10px 0; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .btn-container { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
-        .btn { padding: 18px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 16px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; color: white; }
-        .btn-call { background: #f1c40f; color: black; }
-        .btn-wp { background: #25d366; }
-
-        #loading { color: #d4af37; font-weight: bold; font-size: 18px; }
-        
-        /* Takım Yıldızları */
-        .stars-row { margin-bottom: 5px; }
-        .fa-star { color: #d4af37; font-size: 12px; margin: 0 2px; }
+        body { background: #050505; color: white; font-family: 'Montserrat', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .login-box { background: #111; padding: 40px; border-radius: 30px; border: 1px solid #222; text-align: center; width: 85%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        h1 { font-size: 20px; letter-spacing: 5px; color: #d4af37; margin-bottom: 30px; font-weight: 900; }
+        p { font-size: 13px; color: #777; margin-bottom: 25px; line-height: 1.6; }
+        input { width: 100%; padding: 18px; background: #000; border: 1px solid #333; border-radius: 18px; color: #d4af37; font-size: 28px; text-align: center; letter-spacing: 8px; margin-bottom: 20px; font-weight: 900; outline: none; }
+        input:focus { border-color: #d4af37; }
+        button { width: 100%; padding: 20px; background: linear-gradient(135deg, #d4af37, #f2d06b); border: none; border-radius: 18px; font-weight: 900; cursor: pointer; color: #000; text-transform: uppercase; font-size: 14px; transition: 0.3s; }
+        button:active { transform: scale(0.98); }
+        .error { color: #ff4444; font-size: 12px; margin-top: 15px; display: none; font-weight: 700; }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop playsinline id="bg-video" style="display:none;">
-        <source id="video-src" src="" type="video/mp4">
-    </video>
+<div class="login-box">
+    <h1>KAREKOD<span style="color:white">OTO</span></h1>
+    <p>Ürününüzü aktif etmek için kartın arkasındaki <b>6 haneli güvenlik kodunu</b> giriniz.</p>
+    <input type="tel" id="pincode" maxlength="6" placeholder="000000" autocomplete="off">
+    <button onclick="checkPin()">SİSTEMİ AKTİF ET</button>
+    <div id="error-msg" class="error">❌ Hatalı Kod! Lütfen kartın üzerindeki kodu kontrol edin.</div>
+</div>
 
-    <div class="overlay">
-        <div id="loading">VIP Profil Yükleniyor...</div>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { doc, getDoc, getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        <div class="card" id="profileCard">
-            <div class="logo" id="brandLogo"></div>
-            
-            <div id="teamArea" style="margin: 10px 0;">
-                <div id="starContainer" class="stars-row"></div>
-                <div id="teamLogo"></div>
-            </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCujO03_fQ6xQ3qzzl8TfXazbCNHy0TukI",
+      authDomain: "karekod-oto.firebaseapp.com",
+      projectId: "karekod-oto",
+      storageBucket: "karekod-oto.firebasestorage.app",
+      appId: "1:899053328801:web:1076904672226ae01513e0"
+    };
 
-            <div class="plate-box">
-                <div class="plate-tr">TR</div>
-                <div class="plate-no" id="uPlate">-- --- --</div>
-            </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-            <br>
-            <div id="kanGroup" class="kan-tag" style="display:none;"></div>
-
-            <h1 id="uName">Yükleniyor...</h1>
-
-            <div class="btn-container">
-                <a href="#" id="callBtn" class="btn btn-call"><i class="fas fa-phone"></i> SÜRÜCÜYÜ ARA</a>
-                <a href="#" id="wpBtn" class="btn btn-wp"><i class="fab fa-whatsapp"></i> WHATSAPP MESAJ</a>
-            </div>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCuj003_fQ6XQ3qzzl8TfXazbCNHy0TukI",
-            databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
+    window.checkPin = async function() {
+        const pinInput = document.getElementById('pincode').value;
+        const errorMsg = document.getElementById('error-msg');
+        const btn = document.querySelector('button');
+        
         const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('id');
+        const code = urlParams.get('code');
 
-        const themes = {
-            vid_ocean: "https://player.vimeo.com/external/370331493.sd.mp4?s=3307581692ec1861053001804d9136113b2e5a49&profile_id=139",
-            vid_gold: "https://player.vimeo.com/external/440536785.sd.mp4?s=637c22345091694f27d5f0e1d51543ec8b495914&profile_id=139",
-            vid_space: "https://player.vimeo.com/external/415510651.sd.mp4?s=f520b22a6136e4f323ec910606d5c5f8b9696c6b&profile_id=139"
-        };
+        if(!code) { alert("Hata: QR Kod ID okunamadı!"); return; }
+        if(pinInput.length < 6) { errorMsg.innerText = "Lütfen 6 haneli kodu eksiksiz girin."; errorMsg.style.display = 'block'; return; }
 
-        const teamLogos = { gs: "https://img.icons8.com/color/144/galatasaray.png", fb: "https://img.icons8.com/color/144/fenerbahce.png", bjk: "https://img.icons8.com/color/144/besiktas.png", ts: "https://img.icons8.com/color/144/trabzonspor.png" };
+        try {
+            btn.innerText = "KONTROL EDİLİYOR...";
+            btn.disabled = true;
 
-        if (!code) {
-            window.location.href = "aktifet.html";
-        } else {
-            get(ref(db, 'aktivasyon_kodlari/' + code)).then((snap) => {
-                if (snap.exists()) {
-                    const d = snap.val();
+            const docRef = doc(db, "qr_codes", code);
+            const docSnap = await getDoc(docRef);
 
-                    if (d.durum === "aktif") {
-                        window.location.href = "aktifet.html?code=" + code;
-                    } else {
-                        document.getElementById('loading').style.display = 'none';
-                        document.getElementById('profileCard').style.display = 'block';
-
-                        // Temel Bilgiler
-                        document.getElementById('uName').innerText = d.sahibi;
-                        document.getElementById('uPlate').innerText = d.plaka;
-                        document.getElementById('callBtn').href = "tel:" + d.telefon;
-                        document.getElementById('wpBtn').href = "https://wa.me/9" + d.telefon;
-
-                        // Logo
-                        document.getElementById('brandLogo').innerHTML = `<img src="${d.logo}">`;
-
-                        // Kan Grubu
-                        if(d.kan) {
-                            document.getElementById('kanGroup').innerText = d.kan;
-                            document.getElementById('kanGroup').style.display = 'inline-block';
-                        }
-
-                        // Takım & Yıldızlar
-                        if(d.takim) {
-                            document.getElementById('teamLogo').innerHTML = `<img src="${teamLogos[d.takim]}" style="height:45px;">`;
-                            let starsHtml = "";
-                            for(let i=0; i<parseInt(d.yildiz || 0); i++) {
-                                starsHtml += `<i class="fas fa-star"></i>`;
-                            }
-                            document.getElementById('starContainer').innerHTML = starsHtml;
-                        }
-
-                        // Arka Plan Teması
-                        if(d.tema && themes[d.tema]) {
-                            const video = document.getElementById('bg-video');
-                            const source = document.getElementById('video-src');
-                            source.src = themes[d.tema];
-                            video.style.display = 'block';
-                            video.load();
-                        } else {
-                            document.body.style.background = "#050505";
-                        }
-                    }
-                } else {
-                    window.location.href = "aktifet.html";
-                }
-            });
+            if (docSnap.exists() && docSnap.data().activationCode == pinInput) {
+                // Şifre doğru! Profil sayfasına uçuruyoruz
+                window.location.href = `profil-olustur.html?code=${code}&status=verified`;
+            } else {
+                errorMsg.innerText = "❌ Hatalı Kod! Lütfen tekrar deneyin.";
+                errorMsg.style.display = 'block';
+                btn.innerText = "SİSTEMİ AKTİF ET";
+                btn.disabled = false;
+            }
+        } catch (e) {
+            console.error("Hata:", e);
+            alert("Bağlantı hatası oluştu!");
+            btn.disabled = false;
         }
-    </script>
+    };
+</script>
+
 </body>
 </html>

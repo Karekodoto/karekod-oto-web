@@ -7,86 +7,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Cinzel:wght@700&family=Orbitron:wght@700&family=Fira+Sans:wght@700&family=Playfair+Display:wght@700&family=Poppins:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
-        /* GÜVENLİK: METİN SEÇİMİNİ VE KOPYALAMAYI ENGELLER */
-        body { 
-            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            overflow: hidden; position: fixed; 
-            background: #050505; color: #fff; font-family: 'Montserrat', sans-serif;
-            touch-action: manipulation;
-        }
-
-        :root { 
-            --gold: linear-gradient(135deg, #d4af37 0%, #f2d06b 50%, #d4af37 100%);
-            --gold-solid: #d4af37;
-            --bg: #050505;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { -webkit-user-select: none; user-select: none; margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; position: fixed; background: #050505; color: #fff; font-family: 'Montserrat', sans-serif; touch-action: manipulation; }
+        :root { --gold: linear-gradient(135deg, #d4af37 0%, #f2d06b 50%, #d4af37 100%); --gold-solid: #d4af37; }
+        * { box-sizing: border-box; outline: none; }
         body { display: flex; }
-
-        #panel { 
-            width: 450px; background: #080808; border-right: 1px solid #1a1a1a; 
-            padding: 25px; overflow-y: auto; height: 100vh; scrollbar-width: none; 
-        }
+        #panel { width: 450px; background: #080808; border-right: 1px solid #1a1a1a; padding: 25px; overflow-y: auto; height: 100vh; scrollbar-width: none; }
         #panel::-webkit-scrollbar { display: none; }
-        
-        #preview-area { 
-            flex: 1; display: flex; align-items: center; justify-content: center; 
-            background: radial-gradient(circle, #1a1a1a, #000); position: relative; 
-        }
-
+        #preview-area { flex: 1; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a1a, #000); position: relative; }
         .section-title { font-size: 11px; font-weight: 900; color: var(--gold-solid); letter-spacing: 2px; text-transform: uppercase; margin: 25px 0 12px; display: flex; align-items: center; gap: 10px; border-left: 3px solid var(--gold-solid); padding-left: 10px; }
         .input-group { background: #111; padding: 15px; border-radius: 24px; border: 1px solid #222; margin-bottom: 15px; }
-        
         label { font-size: 10px; color: #777; display: block; margin-bottom: 8px; font-weight: 900; }
-        
-        select { 
-            width: 100%; background: #000; border: 1px solid #333; padding: 14px; color: white; border-radius: 14px; font-size: 14px; margin-bottom: 10px;
-            appearance: none; -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: calc(100% - 15px) center;
-        }
-
-        input { width: 100%; background: #000; border: 1px solid #333; padding: 14px; color: white; border-radius: 14px; font-size: 14px; margin-bottom: 10px; }
-        input::placeholder { color: #444; }
-        
-        input[type="color"] { height: 55px; cursor: pointer; padding: 5px; border: 2px solid #333; }
-
-        .check-container {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px; border: 1px solid #333; border-radius: 14px; margin: 10px 0;
-            background: #000; width: 100%;
-        }
-        .check-container span { font-size: 10px; font-weight: 900; color: #ff0000; }
-        .check-container input[type="checkbox"] { width: 22px; height: 22px; margin: 0; }
-
+        select, input { width: 100%; background: #000; border: 1px solid #333; padding: 14px; color: white; border-radius: 14px; font-size: 14px; margin-bottom: 10px; }
         .upload-btn { background: #000; border: 1px solid #333; padding: 15px; text-align: center; border-radius: 15px; color: #fff; font-size: 12px; font-weight: bold; cursor: pointer; border-style: dashed; }
-        .upload-btn i { font-size: 18px; display: block; margin-bottom: 8px; color: var(--gold-solid); }
-
         .btn-save { background: var(--gold); color: #000; border: none; padding: 22px; width: 100%; border-radius: 20px; font-weight: 900; font-size: 16px; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
-
-        .legal-footer { margin-top: 40px; padding: 20px; border-top: 1px solid #1a1a1a; text-align: center; padding-bottom: 120px; }
-        .legal-footer p { font-size: 10px; color: #444; line-height: 1.6; margin-bottom: 10px; }
-        .legal-footer .license-badge { display: inline-block; padding: 4px 10px; background: #111; border: 1px solid #222; border-radius: 6px; color: #666; font-size: 9px; font-weight: 900; letter-spacing: 1px; }
-
-        .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; background: rgba(0,0,0,0.96); backdrop-filter: blur(20px); z-index: 1000; border-top: 1px solid #222; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #555; font-weight: 900; }
-        .nav-item.active { color: var(--gold-solid); }
-
         .phone-mockup { width: 310px; height: 630px; background: #000; border: 12px solid #1a1a1a; border-radius: 50px; position: relative; overflow: hidden; }
         #preview-frame { width: 100%; height: 100%; border: none; pointer-events: none; }
-
-        @media (max-width: 900px) {
-            #panel { width: 100%; height: calc(100vh - 75px); }
-            #preview-area { display: none; width: 100%; position: fixed; top: 0; height: calc(100vh - 75px); z-index: 500; }
-            #preview-area.active { display: flex; }
-            #panel.hidden { display: none; }
-            .mobile-nav { display: flex; }
-        }
+        @media (max-width: 900px) { #panel { width: 100%; height: calc(100vh - 75px); } #preview-area { display: none; } #preview-area.active { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: calc(100vh - 75px); z-index: 500; } .mobile-nav { display: flex; position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid #222; } }
+        .mobile-nav { display: none; z-index: 1001; justify-content: space-around; align-items: center; }
+        .nav-item { flex: 1; text-align: center; color: #555; font-size: 20px; }
+        .nav-item.active { color: var(--gold-solid); }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div id="panel">
+<body oncontextmenu="return false;">
+
+<div id="panel">
     <div style="text-align: center; margin-bottom: 30px;">
         <h1 style="color:#fff; margin:0; letter-spacing:8px; font-family:'Cinzel'; font-size: 24px;">KAREKOD<span style="color:var(--gold-solid)">OTO</span></h1>
         <span style="font-size: 9px; color: #555; letter-spacing: 4px; font-weight: 900;">SECURE EDITION</span>
@@ -94,38 +38,19 @@
 
     <div class="section-title">LOGO VE MARKA</div>
     <div class="input-group">
-        <div class="upload-btn" onclick="document.getElementById('logo-in').click()" style="border-style: solid;"><i class="fas fa-camera"></i> LOGO YÜKLE</div>
+        <div class="upload-btn" onclick="document.getElementById('logo-in').click()"><i class="fas fa-camera"></i> LOGO YÜKLE</div>
         <input type="file" id="logo-in" hidden accept="image/*" onchange="autoLoadLogo(this)">
-        <label style="margin-top:15px;">LOGO BOYUTU: <span id="size-val" style="color:var(--gold-solid)">85</span>px</label>
-        <input type="range" id="logo-size" min="40" max="140" value="85" oninput="refresh()">
-        <label>OTO ARKA PLAN TEMİZLE:</label>
-        <input type="range" id="logo-th" min="0" max="250" value="230" oninput="manualFix()">
-    </div>
-
-    <div class="section-title">VİDEO & ARKA PLAN</div>
-    <div class="input-group">
-        <label>SİSTEM TEMALARI</label>
-        <select id="theme-sel" onchange="updateTheme(this.value)">
-            <option value="rgb" selected>Cyber Neon</option>
-            <option value="black">Deep Matte Black</option>
-            <option value="white">Pure Pearl White</option>
-            <option value="gold">Luxury Gold Flow</option>
-            <option value="custom">-- Kendi Seçimim --</option>
-        </select>
-        <div class="upload-btn" onclick="document.getElementById('bg-in').click()">
-            <i class="fas fa-photo-video"></i> GÖRSEL VEYA VİDEO EKLE
-        </div>
-        <input type="file" id="bg-in" hidden accept="image/*,video/*" onchange="loadCustomBg(this)">
+        <label>BOYUT: <input type="range" id="logo-size" min="40" max="140" value="85" oninput="refresh()"></label>
+        <label>TEMİZLE: <input type="range" id="logo-th" min="0" max="250" value="230" oninput="manualFix()"></label>
     </div>
 
     <div class="section-title">SÜRÜCÜ BİLGİLERİ</div>
     <div class="input-group">
-        <input type="text" id="name" placeholder="AD SOYAD" value="AD SOYAD" maxlength="35" oninput="refresh()">
-        <input type="tel" id="phone" placeholder="TELEFON" maxlength="15" oninput="refresh()">
-        <input type="text" id="insta" placeholder="INSTAGRAM" maxlength="25" oninput="refresh()">
-        <label>KAN GRUBU</label>
-        <select id="blood" onchange="refresh()" style="color: #ff0000; font-weight: bold;">
-            <option value="">Belirtilmedi</option>
+        <input type="text" id="name" placeholder="AD SOYAD" value="AD SOYAD" oninput="refresh()">
+        <input type="tel" id="phone" placeholder="TELEFON" oninput="refresh()">
+        <input type="text" id="insta" placeholder="INSTAGRAM" oninput="refresh()">
+        <select id="blood" onchange="refresh()">
+            <option value="">Kan Grubu Seçin</option>
             <option value="A Rh+">A Rh+</option><option value="A Rh-">A Rh-</option>
             <option value="B Rh+">B Rh+</option><option value="B Rh-">B Rh-</option>
             <option value="AB Rh+">AB Rh+</option><option value="AB Rh-">AB Rh-</option>
@@ -133,33 +58,25 @@
         </select>
     </div>
 
-    <div class="section-title">PLAKA VE ÖZELLEŞTİRME</div>
+    <div class="section-title">TASARIM AYARLARI</div>
     <div class="input-group">
-        <label>PLAKA METNİ</label>
-        <input type="text" id="plate" placeholder="PLAKA YAZIN" maxlength="15" style="font-weight:900; text-align: center; text-transform: uppercase;" oninput="refresh()">
-        <div class="check-container"><span>KIRMIZI TR PLAKA</span><input type="checkbox" id="red-tr" onchange="refresh()"></div>
-        <label>YAZI TİPİ (FONT STYLE)</label>
-        <select id="font-sel" onchange="refresh()">
-            <option value="'Montserrat'">Montserrat (Modern)</option>
-            <option value="'Cinzel'">Cinzel (Luxury)</option>
-            <option value="'Orbitron'">Orbitron (Cyber)</option>
-            <option value="'Fira Sans'">Fira Sans (Clean)</option>
-            <option value="'Playfair Display'">Playfair (Elite)</option>
-            <option value="'Poppins'">Poppins (Soft)</option>
-            <option value="'Bebas Neue'">Bebas Neue (Bold)</option>
+        <input type="text" id="plate" placeholder="PLAKA" oninput="refresh()">
+        <select id="theme-sel" onchange="updateTheme(this.value)">
+            <option value="rgb">Cyber Neon</option>
+            <option value="black">Mat Siyah</option>
+            <option value="white">İnci Beyazı</option>
+            <option value="gold">Lüks Altın</option>
         </select>
-        <label>İSİM VE BUTON RENGİ</label>
-        <input type="color" id="text-color-picker" value="#d4af37" oninput="refresh()">
-        <label style="margin-top:15px;">KART ŞEFFAFLIĞI: <span id="op-val" style="color:var(--gold-solid)">0.8</span></label>
-        <input type="range" id="opacity" min="0" max="1" step="0.01" value="0.8" oninput="refresh()">
+        <select id="font-sel" onchange="refresh()">
+            <option value="'Montserrat'">Montserrat</option>
+            <option value="'Cinzel'">Cinzel</option>
+            <option value="'Orbitron'">Orbitron</option>
+            <option value="'Bebas Neue'">Bebas Neue</option>
+        </select>
+        <label>RENK: <input type="color" id="text-color-picker" value="#d4af37" oninput="refresh()"></label>
     </div>
 
-    <button class="btn-save" onclick="alert('Güvenli Veri İletimi Başarılı!')">SİPARİŞİ TAMAMLA</button>
-
-    <div class="legal-footer">
-        <p>Protected by KAREKODOTO Encryption. © 2026 Tüm hakları saklıdır.</p>
-        <div class="license-badge">LICENSE: KKO-9942-STU</div>
-    </div>
+    <button class="btn-save" onclick="saveProfile()">PROFİLİ AKTİF ET VE KAYDET</button>
 </div>
 
 <div id="preview-area">
@@ -167,133 +84,113 @@
 </div>
 
 <div class="mobile-nav">
-    <div class="nav-item active" id="m-edit" onclick="setTab('edit')"><i class="fas fa-pen-nib"></i>DÜZENLE</div>
-    <div class="nav-item" id="m-view" onclick="setTab('preview')"><i class="fas fa-eye"></i>ÖNİZLEME</div>
+    <div class="nav-item active" id="btn-edit" onclick="setTab('edit')"><i class="fas fa-edit"></i></div>
+    <div class="nav-item" id="btn-prev" onclick="setTab('preview')"><i class="fas fa-eye"></i></div>
 </div>
 
 <canvas id="canvas" style="display:none;"></canvas>
 
-<script>
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-            return false;
-        }
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { doc, setDoc, getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Senin kopyalayıp attığın en sağlam config:
+    const firebaseConfig = {
+      apiKey: "AIzaSyCuj003_fQ6xQ3qzzl8TfXazbCNHy0TukI",
+      authDomain: "karekod-oto.firebaseapp.com",
+      databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "karekod-oto",
+      storageBucket: "karekod-oto.firebasestorage.app",
+      messagingSenderId: "899053328801",
+      appId: "1:899053328801:web:1076904672226ae01513e0",
+      measurementId: "G-3XF8Z60RM3"
     };
 
-    let imgObj = null, processedLogo = "", customFile = "", isVideo = false, theme = "rgb";
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    function setTab(t) {
-        document.getElementById('m-edit').classList.toggle('active', t==='edit');
-        document.getElementById('m-view').classList.toggle('active', t==='preview');
-        document.getElementById('panel').classList.toggle('hidden', t==='preview');
-        document.getElementById('preview-area').classList.toggle('active', t==='preview');
-    }
+    window.saveProfile = async function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if(!code) { alert("Hata: URL'de kod bulunamadı! Lütfen ?code=TEST1234 ekleyerek deneyin."); return; }
 
-    function autoLoadLogo(el) {
-        if (el.files && el.files[0]) {
-            let r = new FileReader();
-            r.onload = (e) => {
-                let i = new Image();
-                i.onload = () => { imgObj = i; manualFix(); };
-                i.src = e.target.result;
-            };
-            r.readAsDataURL(el.files[0]);
-        }
-    }
-
-    function manualFix() {
-        if (!imgObj) return;
-        let th = document.getElementById('logo-th').value;
-        let c = document.getElementById('canvas');
-        let ctx = c.getContext('2d');
-        c.width = imgObj.width; c.height = imgObj.height;
-        ctx.drawImage(imgObj, 0, 0);
-        let data = ctx.getImageData(0,0,c.width,c.height);
-        for (let i=0; i<data.data.length; i+=4) {
-            if (data.data[i] > th && data.data[i+1] > th && data.data[i+2] > th) data.data[i+3] = 0;
-        }
-        ctx.putImageData(data, 0, 0);
-        processedLogo = c.toDataURL();
-        refresh();
-    }
-
-    function loadCustomBg(el) {
-        if (el.files && el.files[0]) {
-            isVideo = el.files[0].type.startsWith('video');
-            let r = new FileReader();
-            r.onload = (e) => { customFile = e.target.result; theme = "custom"; document.getElementById('theme-sel').value = "custom"; refresh(); };
-            r.readAsDataURL(el.files[0]);
-        }
-    }
-
-    function updateTheme(v) { theme = v; refresh(); }
-
-    function refresh() {
-        const shield = (str) => str.replace(/<\/?[^>]+(>|$)/g, "");
-
-        let op = document.getElementById('opacity').value;
-        let size = document.getElementById('logo-size').value;
-        let font = document.getElementById('font-sel').value;
-        let customColor = document.getElementById('text-color-picker').value;
-        
-        document.getElementById('op-val').innerText = op;
-        document.getElementById('size-val').innerText = size;
-
-        let d = {
-            n: shield(document.getElementById('name').value),
-            t: shield(document.getElementById('phone').value.trim()),
-            i: shield(document.getElementById('insta').value.trim().replace('@','')),
+        const data = {
+            n: document.getElementById('name').value,
+            p: document.getElementById('phone').value,
+            i: document.getElementById('insta').value,
+            pl: document.getElementById('plate').value,
             b: document.getElementById('blood').value,
-            p: shield(document.getElementById('plate').value.toUpperCase()),
-            red: document.getElementById('red-tr').checked
+            t: document.getElementById('theme-sel').value,
+            f: document.getElementById('font-sel').value,
+            c: document.getElementById('text-color-picker').value,
+            isActivated: true,
+            createdAt: new Date().toISOString()
         };
 
-        let bgStyle = "background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); background-size: 400% 400%; animation: g 10s ease infinite;";
-        let cardColor = `rgba(0,0,0, ${op})`;
-        let blurVal = (op * 25); 
-
-        if(theme==='white') {
-            bgStyle = "background: #ffffff;"; cardColor = `rgba(255,255,255, ${op})`;
-        } else if(theme==='black') {
-            bgStyle = "background: #000;"; cardColor = `rgba(15,15,15, ${op})`;
-        } else if(theme==='gold') {
-            bgStyle = "background: linear-gradient(-45deg, #000, #1a1a1a, #d4af37, #000); background-size: 400% 400%; animation: g 15s ease infinite;";
-            cardColor = `rgba(0,0,0, ${op})`;
+        try {
+            await setDoc(doc(db, "qr_codes", code), data);
+            alert("Sistem Başarıyla Aktif Edildi! Bilgileriniz Buluta İşlendi.");
+            window.location.href = "profil-goruntule.html?code=" + code;
+        } catch (e) { 
+            console.error(e);
+            alert("Kritik Hata: " + e.message); 
         }
+    };
+</script>
 
-        const doc = `
-        <!DOCTYPE html><html><head>
+<script>
+    let processedLogo = ""; let imgObj = null; let theme = "rgb";
+    function setTab(t) {
+        document.getElementById('panel').style.display = t==='edit'?'block':'none';
+        document.getElementById('preview-area').classList.toggle('active', t==='preview');
+        document.getElementById('btn-edit').classList.toggle('active', t==='edit');
+        document.getElementById('btn-prev').classList.toggle('active', t==='preview');
+    }
+    function autoLoadLogo(el) {
+        if(el.files[0]) { let r = new FileReader(); r.onload=(e)=>{imgObj=new Image(); imgObj.onload=manualFix; imgObj.src=e.target.result;}; r.readAsDataURL(el.files[0]); }
+    }
+    function manualFix() {
+        if(!imgObj) return; let c = document.getElementById('canvas'); let ctx = c.getContext('2d');
+        c.width=imgObj.width; c.height=imgObj.height; ctx.drawImage(imgObj,0,0);
+        let d = ctx.getImageData(0,0,c.width,c.height); let th = document.getElementById('logo-th').value;
+        for(let i=0; i<d.data.length; i+=4) { if(d.data[i]>th && d.data[i+1]>th && d.data[i+2]>th) d.data[i+3]=0; }
+        ctx.putImageData(d,0,0); processedLogo = c.toDataURL(); refresh();
+    }
+    function updateTheme(v) { theme = v; refresh(); }
+    function refresh() {
+        let d = { n: document.getElementById('name').value, p: document.getElementById('phone').value, i: document.getElementById('insta').value, pl: document.getElementById('plate').value, b: document.getElementById('blood').value };
+        let font = document.getElementById('font-sel').value;
+        let color = document.getElementById('text-color-picker').value;
+        let size = document.getElementById('logo-size').value;
+        let bg = "linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)";
+        if(theme==='black') bg="#000"; if(theme==='white') bg="#fff"; if(theme==='gold') bg="linear-gradient(45deg, #000, #d4af37)";
+
+        const docContent = `
+        <html><head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Cinzel:wght@700&family=Orbitron:wght@700&family=Fira+Sans:wght@700&family=Playfair+Display:wght@700&family=Poppins:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Cinzel:wght@700&family=Orbitron:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
         <style>
-            @keyframes g {0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}}
-            body { margin:0; height:100vh; display:flex; align-items:center; justify-content:center; ${theme!=='custom'?bgStyle:'background:#000'}; font-family:${font}, sans-serif; overflow:hidden; -webkit-user-select:none; user-select:none; }
-            .bg-custom { position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; }
-            .card { width:85vw; max-width:280px; padding:35px 20px; border-radius:40px; text-align:center; background: ${cardColor}; backdrop-filter: blur(${blurVal}px); -webkit-backdrop-filter: blur(${blurVal}px); border: ${op > 0.05 ? '1px solid rgba(255,255,255,0.1)' : 'none'}; }
+            body { margin:0; height:100vh; display:flex; align-items:center; justify-content:center; background:${bg}; font-family:${font}, sans-serif; overflow:hidden; }
+            .card { width:260px; padding:30px; border-radius:35px; background:rgba(0,0,0,0.85); text-align:center; color:#fff; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px); }
             .logo img { max-height:${size}px; margin-bottom:15px; }
-            .plate { background:white; color:black; display:inline-flex; border-radius:6px; overflow:hidden; border:1.5px solid #222; margin-bottom:15px; font-weight:900; height:38px; font-family:'Fira Sans', Arial; }
-            .plate-tr { background:${d.red?'#e30a17':'#003399'}; color:white; width:25px; font-size:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-            .plate-no { padding:0 12px; font-size:16px; line-height:38px; white-space:nowrap; letter-spacing:0.5px; ${!d.p ? 'color:#bbb; font-weight:400; font-size:13px;' : ''} }
-            h1 { font-size:22px; color:${customColor}; text-transform:uppercase; margin:10px 0; }
-            .blood { color:#ff0000; font-size:11px; font-weight:900; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:5px; }
-            .btn { display:flex; align-items:center; justify-content:center; gap:8px; padding:15px; border-radius:20px; text-decoration:none; font-weight:900; color:#000; font-size:13px; background: ${customColor}; margin-bottom:10px; text-transform:uppercase; pointer-events:none; }
-            .btn-wp { background:#25D366; color:white; } /* WhatsApp Rengi */
-        </style>
-        </head><body oncontextmenu="return false;">
-            ${theme==='custom'&&customFile?(isVideo?`<video class="bg-custom" src="${customFile}" autoplay muted loop playsinline></video>`:`<img class="bg-custom" src="${customFile}">`):''}
+            .plate { background:#fff; color:#000; padding:5px 12px; border-radius:6px; font-weight:900; display:inline-block; margin-bottom:15px; border-left:12px solid #003399; font-family:'Arial'; }
+            h1 { color:${color}; font-size:20px; text-transform:uppercase; margin:10px 0; }
+            .btn { display:block; padding:13px; margin:8px 0; border-radius:15px; text-decoration:none; font-weight:900; background:${color}; color:#000; font-size:12px; text-transform:uppercase; }
+            .btn-wp { background:#25D366; color:#fff; }
+            .blood { color:#ff4d4d; font-size:11px; font-weight:bold; margin-bottom:10px; }
+        </style></head>
+        <body>
             <div class="card">
                 <div class="logo">${processedLogo?`<img src="${processedLogo}">`:''}</div>
-                <div class="plate"><div class="plate-tr">TR</div><div class="plate-no">${d.p || 'PLAKA YAZIN'}</div></div>
+                <div class="plate">${d.pl || 'PLAKA BEKLENİYOR'}</div>
                 <h1>${d.n}</h1>
-                ${d.b?`<div class="blood"><i class="fas fa-heartbeat"></i> KAN GRUBU: ${d.b}</div>`:''}
-                <div class="btns">
-                    ${d.t ? `<div class="btn"><i class="fas fa-phone-alt"></i> SÜRÜCÜYÜ ARA</div>` : ''}
-                    ${d.t ? `<div class="btn btn-wp"><i class="fab fa-whatsapp"></i> WHATSAPP</div>` : ''}
-                    ${d.i ? `<div class="btn" style="background:#E1306C; color:white;"><i class="fab fa-instagram"></i> INSTAGRAM</div>` : ''}
-                </div>
+                ${d.b?`<div class="blood"><i class="fas fa-heartbeat"></i> ${d.b}</div>`:''}
+                ${d.p?`<div class="btn"><i class="fas fa-phone"></i> SÜRÜCÜYÜ ARA</div>`:''}
+                ${d.p?`<div class="btn btn-wp"><i class="fab fa-whatsapp"></i> WHATSAPP MESAJ</div>`:''}
+                ${d.i?`<div class="btn" style="background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color:#fff;"><i class="fab fa-instagram"></i> INSTAGRAM</div>`:''}
             </div>
         </body></html>`;
-        document.getElementById('preview-frame').srcdoc = doc;
+        document.getElementById('preview-frame').srcdoc = docContent;
     }
     refresh();
 </script>

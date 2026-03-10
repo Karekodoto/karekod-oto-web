@@ -155,7 +155,7 @@
         <input type="range" id="opacity" min="0" max="1" step="0.01" value="0.8" oninput="refresh()">
     </div>
 
-    <button class="btn-save" onclick="saveProfile()">SİPARİŞİ TAMAMLA</button>
+    <button class="btn-save" onclick="window.saveProfile()">SİPARİŞİ TAMAMLA</button>
 
     <div class="legal-footer">
         <p>Protected by KAREKODOTO Encryption. © 2026 Tüm hakları saklıdır.</p>
@@ -178,7 +178,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { doc, setDoc, getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Senin kopyalayıp gönderdiğin en sağlam config bilgileri
     const firebaseConfig = {
       apiKey: "AIzaSyCujO03_fQ6xQ3qzzl8TfXazbCNHy0TukI",
       authDomain: "karekod-oto.firebaseapp.com",
@@ -193,11 +192,15 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Kayıt Fonksiyonu
+    // Kayıt Fonksiyonunu Global Yapıyoruz
     window.saveProfile = async function() {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
-        if(!code) { alert("Hata: Karekod ID bulunamadı! Lütfen URL'ye ?code=TEST1234 ekleyin."); return; }
+        
+        if(!code) { 
+            alert("Hata: URL'de kod bulunamadı! Lütfen sonuna ?code=TEST yazarak deneyin."); 
+            return; 
+        }
 
         const data = {
             fullName: document.getElementById('name').value,
@@ -216,18 +219,24 @@
         };
 
         try {
+            const btn = document.querySelector('.btn-save');
+            btn.innerText = "KAYDEDİLİYOR...";
+            btn.style.opacity = "0.5";
+            
             await setDoc(doc(db, "qr_codes", code), data);
+            
             alert("Tebrikler! Profilin başarıyla buluta kaydedildi.");
-            window.location.href = "profil-goruntule.html?code=" + code;
+            btn.innerText = "SİPARİŞİ TAMAMLA";
+            btn.style.opacity = "1";
         } catch (e) {
-            console.error("Firebase Hatası: ", e);
-            alert("Kayıt sırasında bir hata oluştu: " + e.message);
+            console.error("Hata:", e);
+            alert("Hata oluştu: " + e.message);
         }
     };
 </script>
 
 <script>
-    /* GÖRSEL MOTOR VE ÖNİZLEME MANTIĞI (DOKUNULMADI) */
+    /* ÖNİZLEME VE GÖRSEL SİSTEM (DOKUNULMADI) */
     document.onkeydown = function(e) {
         if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
             return false;
@@ -284,15 +293,12 @@
 
     function refresh() {
         const shield = (str) => str.replace(/<\/?[^>]+(>|$)/g, "");
-
         let op = document.getElementById('opacity').value;
         let size = document.getElementById('logo-size').value;
         let font = document.getElementById('font-sel').value;
         let customColor = document.getElementById('text-color-picker').value;
-        
         document.getElementById('op-val').innerText = op;
         document.getElementById('size-val').innerText = size;
-
         let d = {
             n: shield(document.getElementById('name').value),
             t: shield(document.getElementById('phone').value.trim()),
@@ -301,20 +307,12 @@
             p: shield(document.getElementById('plate').value.toUpperCase()),
             red: document.getElementById('red-tr').checked
         };
-
         let bgStyle = "background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); background-size: 400% 400%; animation: g 10s ease infinite;";
         let cardColor = `rgba(0,0,0, ${op})`;
         let blurVal = (op * 25); 
-
-        if(theme==='white') {
-            bgStyle = "background: #ffffff;"; cardColor = `rgba(255,255,255, ${op})`;
-        } else if(theme==='black') {
-            bgStyle = "background: #000;"; cardColor = `rgba(15,15,15, ${op})`;
-        } else if(theme==='gold') {
-            bgStyle = "background: linear-gradient(-45deg, #000, #1a1a1a, #d4af37, #000); background-size: 400% 400%; animation: g 15s ease infinite;";
-            cardColor = `rgba(0,0,0, ${op})`;
-        }
-
+        if(theme==='white') { bgStyle = "background: #ffffff;"; cardColor = `rgba(255,255,255, ${op})`; }
+        else if(theme==='black') { bgStyle = "background: #000;"; cardColor = `rgba(15,15,15, ${op})`; }
+        else if(theme==='gold') { bgStyle = "background: linear-gradient(-45deg, #000, #1a1a1a, #d4af37, #000); background-size: 400% 400%; animation: g 15s ease infinite;"; cardColor = `rgba(0,0,0, ${op})`; }
         const previewDoc = `
         <!DOCTYPE html><html><head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

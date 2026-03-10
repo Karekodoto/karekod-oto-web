@@ -3,88 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KAREKODOTO | V148 NEON EDITION</title>
+    <title>KAREKODOTO | SIGNATURE EDITION</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Cinzel:wght@700&family=Orbitron:wght@700&family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #050505; --card: #111111; --text: #ffffff; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        :root { 
+            --gold: linear-gradient(135deg, #d4af37 0%, #f2d06b 50%, #d4af37 100%);
+            --gold-solid: #d4af37;
+            --bg: #050505;
+            --card-bg: rgba(15, 15, 15, 0.95);
+            --text: #ffffff;
+            --red: #ff0000;
+        }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; display: flex; height: 100vh; overflow: hidden; }
 
-        /* PANEL SOL */
-        #panel { width: 450px; background: #080808; border-right: 1px solid #1a1a1a; padding: 25px; overflow-y: auto; height: 100%; scrollbar-width: none; }
+        /* MASAÜSTÜ DÜZENİ */
+        #panel { width: 450px; background: #080808; border-right: 1px solid #1a1a1a; padding: 25px; overflow-y: auto; scrollbar-width: none; }
         #panel::-webkit-scrollbar { display: none; }
-        #preview-area { flex: 1; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #111, #000); position: relative; }
-
-        .section-title { font-size: 11px; font-weight: 900; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin: 25px 0 12px; display: flex; align-items: center; gap: 10px; }
-        .input-group { background: var(--card); padding: 18px; border-radius: 20px; border: 1px solid #222; margin-bottom: 15px; }
         
-        label { font-size: 10px; color: #888; display: block; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; }
-        input, select { width: 100%; background: #000; border: 1px solid #333; padding: 14px; color: white; border-radius: 12px; font-size: 14px; margin-bottom: 10px; transition: var(--transition); }
+        #preview-area { flex: 1; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a1a, #000); }
+
+        /* MOBİL CANLI ÖNİZLEME (INLINE) */
+        #mobile-preview-container { display: none; width: 100%; background: #000; padding: 20px 0; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100; }
+
+        .section-title { font-size: 11px; font-weight: 900; color: var(--gold-solid); letter-spacing: 2px; text-transform: uppercase; margin: 25px 0 12px; display: flex; align-items: center; gap: 10px; border-left: 3px solid var(--gold-solid); padding-left: 10px; }
+        .input-group { background: #111; padding: 20px; border-radius: 20px; border: 1px solid #222; margin-bottom: 15px; }
         
-        .upload-btn { background: #111; border: 2px dashed #444; padding: 15px; text-align: center; border-radius: 15px; color: #aaa; font-size: 13px; font-weight: bold; cursor: pointer; }
-        .upload-btn i { font-size: 20px; display: block; margin-bottom: 8px; color: var(--gold); }
+        label { font-size: 10px; color: #666; display: block; margin-bottom: 8px; font-weight: 900; }
+        input, select { width: 100%; background: #000; border: 1px solid #333; padding: 14px; color: white; border-radius: 12px; font-size: 14px; margin-bottom: 10px; font-family: 'Montserrat'; }
+        
+        .upload-btn { background: #000; border: 1px solid #333; padding: 15px; text-align: center; border-radius: 15px; color: #fff; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .upload-btn i { font-size: 18px; display: block; margin-bottom: 8px; color: var(--gold-solid); }
 
-        .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 1000; border-top: 1px solid #222; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #555; font-weight: 900; }
-        .nav-item.active { color: var(--gold); }
+        .btn-save { background: var(--gold); color: #000; border: none; padding: 22px; width: 100%; border-radius: 20px; font-weight: 900; font-size: 16px; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
 
-        .phone-mockup { width: 320px; height: 650px; background: #000; border: 12px solid #1a1a1a; border-radius: 50px; position: relative; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
+        .phone-mockup { width: 300px; height: 600px; background: #000; border: 8px solid #1a1a1a; border-radius: 40px; position: relative; overflow: hidden; margin: 0 auto; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         #preview-frame { width: 100%; height: 100%; border: none; }
 
         @media (max-width: 900px) {
-            body { flex-direction: column; }
-            #panel { width: 100%; height: calc(100vh - 75px); padding-bottom: 40px; }
-            #preview-area { display: none; width: 100%; position: fixed; top: 0; height: calc(100vh - 75px); z-index: 500; }
-            #preview-area.active { display: flex; }
-            #panel.hidden { display: none; }
-            .mobile-nav { display: flex; }
+            body { flex-direction: column; overflow-y: auto; height: auto; }
+            #panel { width: 100%; height: auto; overflow: visible; padding-top: 10px; }
+            #preview-area { display: none; } /* Yan tarafı kapat */
+            #mobile-preview-container { display: block; } /* Üstteki canlı önizlemeyi aç */
+            .phone-mockup { transform: scale(0.85); margin-top: -30px; margin-bottom: -30px; }
         }
-
-        .btn-save { background: linear-gradient(135deg, #d4af37, #f2d06b); color: #000; border: none; padding: 20px; width: 100%; border-radius: 18px; font-weight: 900; font-size: 16px; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
 
+<div id="mobile-preview-container">
+    <div class="phone-mockup"><iframe id="preview-frame-mobile"></iframe></div>
+</div>
+
 <div id="panel">
     <div style="text-align: center; margin-bottom: 25px;">
-        <h1 style="color:var(--gold); margin:0; letter-spacing:6px; font-family:'Cinzel';">KAREKODOTO</h1>
-        <span style="font-size: 10px; color: #555; letter-spacing: 3px; font-weight: 900;">NEON EDITION V148</span>
+        <h1 style="color:#fff; margin:0; letter-spacing:8px; font-family:'Cinzel'; font-size: 22px;">KAREKOD<span style="color:var(--gold-solid)">OTO</span></h1>
+        <span style="font-size: 9px; color: #555; letter-spacing: 4px; font-weight: 900;">SIGNATURE EDITION</span>
     </div>
 
-    <div class="section-title">1. MARKA LOGOSU</div>
+    <div class="section-title">MARKA VE LOGO</div>
     <div class="input-group">
-        <div class="upload-btn" onclick="document.getElementById('logo-in').click()"><i class="fas fa-camera"></i> LOGO SEÇ / YÜKLE</div>
+        <div class="upload-btn" onclick="document.getElementById('logo-in').click()"><i class="fas fa-camera"></i> LOGO YÜKLE</div>
         <input type="file" id="logo-in" hidden accept="image/*" onchange="autoLoadLogo(this)">
-        <label style="margin-top:15px;">BOYUT: <span id="size-val" style="color:var(--gold)">80</span>px</label>
-        <input type="range" id="logo-size" min="30" max="150" value="80" oninput="refresh()">
-        <label>OTO-TEMİZLEME HASSASİYETİ:</label>
-        <input type="range" id="logo-th" min="0" max="250" value="230" oninput="manualFix()">
+        <label style="margin-top:15px;">LOGO BOYUTU: <span id="size-val" style="color:var(--gold-solid)">85</span>px</label>
+        <input type="range" id="logo-size" min="40" max="140" value="85" oninput="refresh()">
+        <input type="range" id="logo-th" min="0" max="250" value="230" oninput="manualFix()" hidden>
     </div>
 
-    <div class="section-title">2. GÖRSEL TEMA & VİDEO</div>
+    <div class="section-title">SİSTEM TEMALARI</div>
     <div class="input-group">
         <select id="theme-sel" onchange="updateTheme(this.value)">
-            <option value="rgb" selected>Neon Cyber RGB</option>
-            <option value="gold">Sıvı Altın Akışı</option>
-            <option value="black">Deep Matte Black</option>
-            <option value="white">Pure Pearl White</option>
-            <option value="custom">-- Kendi Dosyan --</option>
+            <option value="black" selected>Deep Matte Black</option>
+            <option value="white">Pure Pearl White</option> <option value="gold">Luxury Gold Flow</option>
+            <option value="rgb">Cyber Neon</option>
+            <option value="custom">-- Kendi Videon --</option>
         </select>
-        <div class="upload-btn" onclick="document.getElementById('bg-in').click()" style="background:#000; border-style:solid; margin-top:10px;">
-            <i class="fas fa-clapperboard"></i> VİDEO VEYA GÖRSEL YÜKLE
+        <div class="upload-btn" onclick="document.getElementById('bg-in').click()" style="margin-top:10px; border-style: solid;">
+            <i class="fas fa-play-circle"></i> VİDEO YÜKLE
         </div>
         <input type="file" id="bg-in" hidden accept="image/*,video/*" onchange="loadCustomBg(this)">
     </div>
 
-    <div class="section-title">3. SÜRÜCÜ BİLGİLERİ</div>
+    <div class="section-title">SÜRÜCÜ BİLGİLERİ</div>
     <div class="input-group">
         <input type="text" id="name" placeholder="AD SOYAD" value="AD SOYAD" oninput="refresh()">
-        <input type="tel" id="phone" placeholder="TELEFON (05XX...)" oninput="refresh()">
-        <input type="text" id="insta" placeholder="INSTAGRAM (@...)" oninput="refresh()">
+        <input type="tel" id="phone" placeholder="TELEFON" oninput="refresh()">
+        <input type="text" id="insta" placeholder="INSTAGRAM" oninput="refresh()">
         <label>KAN GRUBU</label>
-        <select id="blood" onchange="refresh()">
+        <select id="blood" onchange="refresh()" style="color: var(--red); font-weight: bold;">
             <option value="">Belirtilmedi</option>
             <option value="A Rh+">A Rh+</option><option value="A Rh-">A Rh-</option>
             <option value="B Rh+">B Rh+</option><option value="B Rh-">B Rh-</option>
@@ -93,60 +101,31 @@
         </select>
     </div>
 
-    <div class="section-title">4. KART STİLİ</div>
+    <div class="section-title">PLAKA AYARI</div>
     <div class="input-group">
-        <label>ŞEFFAFLIK: <span id="op-val" style="color:var(--gold)">0.7</span></label>
-        <input type="range" id="opacity" min="0" max="1" step="0.01" value="0.7" oninput="refresh()">
-        <select id="font-sel" onchange="refresh()">
-            <option value="'Montserrat'">Modern (Montserrat)</option>
-            <option value="'Cinzel'">Lüks (Cinzel)</option>
-            <option value="'Dancing Script'">Zarif (Dancing)</option>
-            <option value="'Orbitron'">Tech (Orbitron)</option>
-            <option value="'Playfair Display'">Klasik (Playfair)</option>
-        </select>
-        <input type="color" id="accent" value="#d4af37" oninput="refresh()" style="height:45px; cursor:pointer;">
-    </div>
-
-    <div class="section-title">5. ARAÇ PLAKASI</div>
-    <div class="input-group">
-        <input type="text" id="plate" value="34 VIP 01" placeholder="PLAKA NO" style="font-weight:900;">
-        <label style="display:flex; align-items:center; gap:8px; color:#e30a17; cursor:pointer; font-size:11px;">
-            <input type="checkbox" id="red-tr" onchange="refresh()"> KIRMIZI TR (RESMİ PLAKA)
+        <input type="text" id="plate" value="34 VIP 01" maxlength="12" style="font-weight:900; text-align: center;">
+        <label style="display:flex; align-items:center; gap:8px; color:var(--red); cursor:pointer; font-size:10px;">
+            <input type="checkbox" id="red-tr" onchange="refresh()"> KIRMIZI TR PLAKA
         </label>
     </div>
 
-    <button class="btn-save" onclick="alert('Tasarladığınız dijital profil başarıyla kaydedildi!')">TASARIMI TAMAMLA</button>
-
-    <div style="font-size:9px; color:#333; text-align:center; margin:30px 0; padding-top:20px; border-top:1px solid #111;">
-        © KAREKODOTO™ - DIGITAL VEHICLE SOLUTIONS
-    </div>
+    <button class="btn-save" onclick="alert('Siparişiniz Hazırlanıyor...')">SİPARİŞİ TAMAMLA</button>
+    <div style="height: 50px;"></div>
 </div>
 
 <div id="preview-area">
-    <div class="phone-mockup"><iframe id="preview-frame"></iframe></div>
-</div>
-
-<div class="mobile-nav">
-    <div class="nav-item active" id="m-edit" onclick="setTab('edit')"><i class="fas fa-sliders"></i>DÜZENLE</div>
-    <div class="nav-item" id="m-view" onclick="setTab('preview')"><i class="fas fa-mobile-screen"></i>ÖNİZLEME</div>
+    <div class="phone-mockup"><iframe id="preview-frame-desktop"></iframe></div>
 </div>
 
 <canvas id="canvas" style="display:none;"></canvas>
 
 <script>
-    let imgObj = null, processedLogo = "", customFile = "", isVideo = false, theme = "rgb"; // NEON BAŞLAR
+    let imgObj = null, processedLogo = "", customFile = "", isVideo = false, theme = "black";
 
     document.getElementById('plate').addEventListener('input', function(e) {
         this.value = this.value.toUpperCase().replace(/i/g, "İ");
         refresh();
     });
-
-    function setTab(t) {
-        document.getElementById('m-edit').classList.toggle('active', t==='edit');
-        document.getElementById('m-view').classList.toggle('active', t==='preview');
-        document.getElementById('panel').classList.toggle('hidden', t==='preview');
-        document.getElementById('preview-area').classList.toggle('active', t==='preview');
-    }
 
     function autoLoadLogo(el) {
         if (el.files && el.files[0]) {
@@ -188,9 +167,7 @@
     function updateTheme(v) { theme = v; refresh(); }
 
     function refresh() {
-        let op = document.getElementById('opacity').value;
         let size = document.getElementById('logo-size').value;
-        document.getElementById('op-val').innerText = op;
         document.getElementById('size-val').innerText = size;
 
         let d = {
@@ -199,8 +176,6 @@
             i: document.getElementById('insta').value.trim().replace('@',''),
             b: document.getElementById('blood').value,
             p: document.getElementById('plate').value,
-            c: document.getElementById('accent').value,
-            f: document.getElementById('font-sel').value,
             red: document.getElementById('red-tr').checked
         };
 
@@ -208,31 +183,32 @@
         if(wpNum.startsWith('0')) wpNum = '9' + wpNum;
         else if(wpNum.startsWith('5')) wpNum = '90' + wpNum;
 
-        let bg = "";
-        if(theme==='gold') bg = "background: linear-gradient(-45deg, #000, #1a1a1a, #d4af37, #000); background-size: 400% 400%; animation: g 15s ease infinite;";
-        else if(theme==='rgb') bg = "background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); background-size: 400% 400%; animation: g 10s ease infinite;";
-        else if(theme==='black') bg = "background: #000;";
-        else if(theme==='white') bg = "background: #fff;";
+        let bgStyle = "";
+        let textColor = "#fff";
+        let cardBg = "rgba(0,0,0,0.8)";
+        
+        if(theme==='black') bgStyle = "background: #000;";
+        else if(theme==='white') { bgStyle = "background: #f5f5f5;"; textColor = "#000"; cardBg = "rgba(255,255,255,0.9)"; }
+        else if(theme==='gold') bgStyle = "background: linear-gradient(-45deg, #000, #1a1a1a, #d4af37, #000); background-size: 400% 400%; animation: g 15s ease infinite;";
+        else if(theme==='rgb') bgStyle = "background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); background-size: 400% 400%; animation: g 10s ease infinite;";
 
         const doc = `
         <!DOCTYPE html><html><head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Cinzel:wght@700&family=Orbitron:wght@700&family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
         <style>
             @keyframes g {0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}}
-            body { margin:0; height:100vh; display:flex; align-items:center; justify-content:center; ${theme!=='custom'?bg:'background:#000'}; font-family:${d.f}, sans-serif; overflow:hidden; }
+            body { margin:0; height:100vh; display:flex; align-items:center; justify-content:center; ${theme!=='custom'?bgStyle:'background:#000'}; font-family:'Montserrat', sans-serif; overflow:hidden; color:${textColor}; }
             .bg-custom { position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; }
-            .card { width:88vw; max-width:300px; padding:40px 20px; border-radius:40px; text-align:center; background: rgba(0,0,0, ${op}); ${op > 0 ? 'backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.1);' : ''} }
-            .logo img { max-height:${size}px; margin-bottom:20px; }
-            .plate { background:white; color:black; display:inline-flex; border-radius:10px; overflow:hidden; border:2.5px solid ${d.c}; margin-bottom:20px; font-weight:900; font-family:Arial; }
-            /* PLAKA DÜZELTME */
-            .plate-tr { background:${d.red?'#e30a17':'#003399'}; color:white; width:35px; min-height:45px; font-size:12px; display:flex; align-items:center; justify-content:center; }
-            .plate-no { padding:0 15px; font-size:24px; display:flex; align-items:center; min-height:45px; letter-spacing:1px; line-height:45px; }
-            h1 { font-size:26px; color:${d.c}; text-transform:uppercase; margin:10px 0; }
-            .blood { color:#ff4d4d; font-size:13px; font-weight:900; margin-bottom:15px; letter-spacing:1px; }
-            .btns { display:flex; flex-direction:column; gap:12px; }
-            .btn { display:flex; align-items:center; justify-content:center; gap:10px; padding:18px; border-radius:22px; text-decoration:none; font-weight:bold; color:white; font-size:16px; transition:0.2s; }
-            .btn-c { background:#2ecc71; } .btn-w { background:#25D366; } .btn-i { background:linear-gradient(45deg, #f09433, #bc1888); }
+            .card { width:85vw; max-width:280px; padding:30px 20px; border-radius:35px; text-align:center; background: ${cardBg}; backdrop-filter:blur(15px); border:1px solid rgba(212,175,55,0.3); }
+            .logo img { max-height:${size}px; margin-bottom:15px; }
+            .plate { background:white; color:black; display:inline-flex; border-radius:8px; overflow:hidden; border:2px solid #d4af37; margin-bottom:15px; height:38px; }
+            .plate-tr { background:${d.red?'#e30a17':'#003399'}; color:white; width:28px; font-size:10px; display:flex; align-items:center; justify-content:center; }
+            .plate-no { padding:0 10px; font-size:18px; line-height:38px; font-weight:900; }
+            h1 { font-family:'Cinzel'; font-size:20px; color:#d4af37; margin:5px 0; }
+            .blood { color:#ff0000; font-size:11px; font-weight:900; margin-bottom:15px; }
+            .btn { display:flex; align-items:center; justify-content:center; gap:8px; padding:15px; border-radius:18px; text-decoration:none; font-weight:900; color:#000; font-size:13px; background: var(--gold, linear-gradient(135deg, #d4af37, #f2d06b)); margin-bottom:8px; text-transform:uppercase; }
+            .btn-i { background: #fff; border: 1px solid #ddd; }
         </style>
         </head><body>
             ${theme==='custom'&&customFile?(isVideo?`<video class="bg-custom" src="${customFile}" autoplay muted loop playsinline></video>`:`<img class="bg-custom" src="${customFile}">`):''}
@@ -240,15 +216,16 @@
                 <div class="logo">${processedLogo?`<img src="${processedLogo}">`:''}</div>
                 <div class="plate"><div class="plate-tr">TR</div><div class="plate-no">${d.p}</div></div>
                 <h1>${d.n}</h1>
-                ${d.b?`<div class="blood"><i class="fas fa-tint"></i> KAN GRUBU: ${d.b}</div>`:''}
+                ${d.b?`<div class="blood"><i class="fas fa-heartbeat"></i> ${d.b}</div>`:''}
                 <div class="btns">
-                    ${d.t ? `<a href="tel:${d.t}" class="btn btn-c"><i class="fas fa-phone-alt"></i> SÜRÜCÜYÜ ARA</a>` : ''}
-                    ${d.t ? `<a href="https://wa.me/${wpNum}" class="btn btn-w"><i class="fab fa-whatsapp"></i> WHATSAPP</a>` : ''}
-                    ${d.i ? `<a href="https://instagram.com/${d.i}" class="btn btn-i"><i class="fab fa-instagram"></i> INSTAGRAM</a>` : ''}
+                    ${d.t ? `<a href="tel:${d.t}" class="btn"><i class="fas fa-phone-alt"></i> ARA</a>` : ''}
+                    ${d.t ? `<a href="https://wa.me/${wpNum}" class="btn"><i class="fab fa-whatsapp"></i> MESAJ</a>` : ''}
+                    ${d.i ? `<a href="https://instagram.com/${d.i}" class="btn btn-i"><i class="fab fa-instagram"></i> INSTA</a>` : ''}
                 </div>
             </div>
         </body></html>`;
-        document.getElementById('preview-frame').srcdoc = doc;
+        document.getElementById('preview-frame-desktop').srcdoc = doc;
+        document.getElementById('preview-frame-mobile').srcdoc = doc;
     }
     refresh();
 </script>

@@ -2,42 +2,74 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KAREKODOTO | Araç Sahibi Profili</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KAREKODOTO | SÜRÜCÜ PROFİLİ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Cinzel:wght@700&family=Orbitron:wght@700&family=Fira+Sans:wght@700&family=Playfair+Display:wght@700&family=Poppins:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
-        body { background: #050505; color: white; font-family: 'Montserrat', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .profile-card { background: #111; padding: 30px; border-radius: 40px; border: 1px solid #222; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.9); }
-        .plaka-badge { background: #fff; color: #000; padding: 8px 20px; border-radius: 12px; font-weight: 900; font-size: 22px; display: inline-block; margin-bottom: 20px; border-left: 15px solid #003399; }
-        h2 { font-weight: 900; margin: 10px 0; font-size: 24px; color: #d4af37; text-transform: uppercase; }
-        .status { color: #555; font-size: 12px; margin-bottom: 30px; letter-spacing: 1px; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Montserrat', sans-serif; }
         
-        .contact-links { display: grid; gap: 15px; }
-        .link-btn { display: flex; align-items: center; justify-content: center; gap: 15px; padding: 18px; border-radius: 20px; text-decoration: none; font-weight: 700; font-size: 16px; transition: 0.3s; }
+        /* ARKA PLAN SİSTEMİ */
+        #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .bg-media { width: 100%; height: 100%; object-fit: cover; }
+        .bg-gradient { width: 100%; height: 100%; background-size: 400% 400%; animation: g 10s ease infinite; }
         
-        .tel { background: #d4af37; color: #000; }
-        .wp { background: #25D366; color: white; }
-        .insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; }
-        
-        .link-btn:active { transform: scale(0.95); }
-        .footer-logo { margin-top: 40px; font-size: 10px; color: #333; letter-spacing: 3px; }
+        @keyframes g { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+        /* KART TASARIMI */
+        .wrapper { height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { 
+            width: 85vw; max-width: 320px; padding: 40px 25px; border-radius: 45px; 
+            text-align: center; position: relative; transition: 0.5s;
+        }
+
+        .logo-area img { margin-bottom: 20px; display: inline-block; }
+
+        .plate { 
+            background: white; color: black; display: inline-flex; border-radius: 8px; 
+            overflow: hidden; border: 2px solid #222; margin-bottom: 20px; 
+            height: 42px; font-family: 'Fira Sans', sans-serif; font-weight: 900;
+        }
+        .plate-tr { width: 30px; color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+        .plate-no { padding: 0 15px; font-size: 18px; line-height: 42px; letter-spacing: 1px; }
+
+        h1 { font-size: 24px; text-transform: uppercase; margin: 15px 0; letter-spacing: 1px; }
+        .blood { color: #ff0000; font-size: 12px; font-weight: 900; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+        /* BUTONLAR */
+        .btn-list { display: flex; flex-direction: column; gap: 12px; }
+        .btn { 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            padding: 18px; border-radius: 22px; text-decoration: none; 
+            font-weight: 900; font-size: 14px; text-transform: uppercase; 
+            transition: 0.3s active; color: #000;
+        }
+        .btn:active { transform: scale(0.95); opacity: 0.8; }
+        .btn-wp { background: #25D366 !important; color: white !important; }
+        .btn-insta { background: #E1306C !important; color: white !important; }
+
+        #loading { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; color: #d4af37; font-weight: 900; letter-spacing: 4px; }
     </style>
 </head>
 <body>
 
-<div class="profile-card">
-    <div id="plaka" class="plaka-badge">...</div>
-    <h2 id="isim">Yükleniyor...</h2>
-    <div class="status">AKTİF KAREKOD PROFİLİ</div>
+<div id="loading">KAREKODOTO...</div>
 
-    <div class="contact-links">
-        <a id="btn-tel" href="#" class="link-btn tel"><i class="fas fa-phone"></i> HEMEN ARA</a>
-        <a id="btn-wp" href="#" class="link-btn wp"><i class="fab fa-whatsapp"></i> WHATSAPP MESAJ</a>
-        <a id="btn-insta" href="#" class="link-btn insta"><i class="fab fa-instagram"></i> INSTAGRAM</a>
+<div id="bg-container"></div>
+
+<div class="wrapper">
+    <div class="card" id="main-card">
+        <div class="logo-area" id="logo-place"></div>
+        <div class="plate" id="plate-area">
+            <div class="plate-tr" id="tr-color">TR</div>
+            <div class="plate-no" id="plate-text">------</div>
+        </div>
+        <h1 id="user-name">YÜKLENİYOR...</h1>
+        <div id="blood-area"></div>
+        
+        <div class="btn-list" id="action-btns">
+            </div>
     </div>
-
-    <div class="footer-logo">KAREKODOTO.COM</div>
 </div>
 
 <script type="module">
@@ -47,6 +79,7 @@
     const firebaseConfig = {
       apiKey: "AIzaSyCujO03_fQ6xQ3qzzl8TfXazbCNHy0TukI",
       authDomain: "karekod-oto.firebaseapp.com",
+      databaseURL: "https://karekod-oto-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "karekod-oto",
       storageBucket: "karekod-oto.firebasestorage.app",
       appId: "1:899053328801:web:1076904672226ae01513e0"
@@ -55,31 +88,91 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+    async function loadProfile() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
 
-    async function profilYukle() {
-        if(!code) return;
-        const docRef = doc(db, "qr_codes", code);
-        const docSnap = await getDoc(docRef);
+        if(!code) {
+            document.getElementById('user-name').innerText = "KOD GEÇERSİZ";
+            return;
+        }
 
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            document.getElementById('plaka').innerText = data.plate || "PLAKA YOK";
-            document.getElementById('isim').innerText = data.name + " " + data.surname;
-            
-            // Linkleri Bağla
-            document.getElementById('btn-tel').href = "tel:" + data.phone;
-            document.getElementById('btn-wp').href = "https://wa.me/90" + data.phone.replace(/\D/g,'');
-            
-            if(data.instagram) {
-                document.getElementById('btn-insta').href = "https://instagram.com/" + data.instagram.replace('@','');
+        try {
+            const docRef = doc(db, "qr_codes", code);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                renderUI(data);
             } else {
-                document.getElementById('btn-insta').style.display = 'none';
+                window.location.href = `profil-olustur.html?code=${code}`;
             }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            document.getElementById('loading').style.display = 'none';
         }
     }
-    profilYukle();
+
+    function renderUI(data) {
+        // 1. Tema ve Arka Plan
+        const bg = document.getElementById('bg-container');
+        if(data.theme === 'custom' && data.bgFileUrl) {
+            if(data.isVideo) {
+                bg.innerHTML = `<video class="bg-media" src="${data.bgFileUrl}" autoplay muted loop playsinline></video>`;
+            } else {
+                bg.innerHTML = `<img class="bg-media" src="${data.bgFileUrl}">`;
+            }
+        } else {
+            let style = "linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)"; // Default RGB
+            if(data.theme === 'black') style = "#000";
+            if(data.theme === 'white') style = "#fff";
+            if(data.theme === 'gold') style = "linear-gradient(-45deg, #000, #1a1a1a, #d4af37, #000)";
+            bg.innerHTML = `<div class="bg-gradient" style="background: ${style}"></div>`;
+        }
+
+        // 2. Kart Ayarları
+        const card = document.getElementById('main-card');
+        const blurVal = data.opacity * 25;
+        card.style.background = data.theme === 'white' ? `rgba(255,255,255,${data.opacity})` : `rgba(0,0,0,${data.opacity})`;
+        card.style.backdropFilter = `blur(${blurVal}px)`;
+        card.style.webkitBackdropFilter = `blur(${blurVal}px) text-shadow: 0 2px 10px rgba(0,0,0,0.5)`;
+        card.style.fontFamily = data.font;
+
+        // 3. Logo
+        if(data.userLogo) {
+            document.getElementById('logo-place').innerHTML = `<img src="${data.userLogo}" style="max-height:${data.logoSize}px">`;
+        }
+
+        // 4. Bilgiler
+        document.getElementById('user-name').innerText = data.fullName;
+        document.getElementById('user-name').style.color = data.color;
+        document.getElementById('plate-text').innerText = data.plate || "PLAKASIZ";
+        document.getElementById('tr-color').style.background = data.redPlate ? "#e30a17" : "#003399";
+        
+        if(data.blood) {
+            document.getElementById('blood-area').innerHTML = `<div class="blood"><i class="fas fa-heartbeat"></i> KAN GRUBU: ${data.blood}</div>`;
+        }
+
+        // 5. Butonlar
+        const btns = document.getElementById('action-btns');
+        let btnHtml = "";
+        
+        if(data.phone) {
+            btnHtml += `<a href="tel:${data.phone}" class="btn" style="background:${data.color}"><i class="fas fa-phone-alt"></i> SÜRÜCÜYÜ ARA</a>`;
+            btnHtml += `<a href="https://wa.me/90${data.phone.replace(/\D/g,'')}" class="btn btn-wp"><i class="fab fa-whatsapp"></i> WHATSAPP MESAJ</a>`;
+        }
+        
+        if(data.instagram) {
+            const user = data.instagram.replace('@','');
+            btnHtml += `<a href="https://instagram.com/${user}" class="btn btn-insta"><i class="fab fa-instagram"></i> INSTAGRAM</a>`;
+        }
+        
+        btns.innerHTML = btnHtml;
+    }
+
+    loadProfile();
 </script>
+
 </body>
 </html>

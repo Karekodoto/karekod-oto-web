@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAREKODOTO | Araç Sahibi Profili</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #050505; color: white; font-family: 'Montserrat', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .profile-card { background: #111; padding: 30px; border-radius: 40px; border: 1px solid #222; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.9); }
+        .plaka-badge { background: #fff; color: #000; padding: 8px 20px; border-radius: 12px; font-weight: 900; font-size: 22px; display: inline-block; margin-bottom: 20px; border-left: 15px solid #003399; }
+        h2 { font-weight: 900; margin: 10px 0; font-size: 24px; color: #d4af37; text-transform: uppercase; }
+        .status { color: #555; font-size: 12px; margin-bottom: 30px; letter-spacing: 1px; }
+        
+        .contact-links { display: grid; gap: 15px; }
+        .link-btn { display: flex; align-items: center; justify-content: center; gap: 15px; padding: 18px; border-radius: 20px; text-decoration: none; font-weight: 700; font-size: 16px; transition: 0.3s; }
+        
+        .tel { background: #d4af37; color: #000; }
+        .wp { background: #25D366; color: white; }
+        .insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; }
+        
+        .link-btn:active { transform: scale(0.95); }
+        .footer-logo { margin-top: 40px; font-size: 10px; color: #333; letter-spacing: 3px; }
+    </style>
+</head>
+<body>
+
+<div class="profile-card">
+    <div id="plaka" class="plaka-badge">...</div>
+    <h2 id="isim">Yükleniyor...</h2>
+    <div class="status">AKTİF KAREKOD PROFİLİ</div>
+
+    <div class="contact-links">
+        <a id="btn-tel" href="#" class="link-btn tel"><i class="fas fa-phone"></i> HEMEN ARA</a>
+        <a id="btn-wp" href="#" class="link-btn wp"><i class="fab fa-whatsapp"></i> WHATSAPP MESAJ</a>
+        <a id="btn-insta" href="#" class="link-btn insta"><i class="fab fa-instagram"></i> INSTAGRAM</a>
+    </div>
+
+    <div class="footer-logo">KAREKODOTO.COM</div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { doc, getDoc, getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCujO03_fQ6xQ3qzzl8TfXazbCNHy0TukI",
+      authDomain: "karekod-oto.firebaseapp.com",
+      projectId: "karekod-oto",
+      storageBucket: "karekod-oto.firebasestorage.app",
+      appId: "1:899053328801:web:1076904672226ae01513e0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    async function profilYukle() {
+        if(!code) return;
+        const docRef = doc(db, "qr_codes", code);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            document.getElementById('plaka').innerText = data.plate || "PLAKA YOK";
+            document.getElementById('isim').innerText = data.name + " " + data.surname;
+            
+            // Linkleri Bağla
+            document.getElementById('btn-tel').href = "tel:" + data.phone;
+            document.getElementById('btn-wp').href = "https://wa.me/90" + data.phone.replace(/\D/g,'');
+            
+            if(data.instagram) {
+                document.getElementById('btn-insta').href = "https://instagram.com/" + data.instagram.replace('@','');
+            } else {
+                document.getElementById('btn-insta').style.display = 'none';
+            }
+        }
+    }
+    profilYukle();
+</script>
+</body>
+</html>
